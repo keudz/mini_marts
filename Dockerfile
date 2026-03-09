@@ -1,13 +1,13 @@
-# Bước 1: Build dự án bằng Maven (Giữ nguyên hoặc đổi sang image maven mới hơn)
+# Bước 1: Build dự án
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 COPY . .
-RUN mvn clean package -DskipTests
+# Thêm cờ ép dùng UTF-8 để Maven không bắt lỗi ký tự lạ
+RUN mvn clean package -DskipTests -Dproject.build.sourceEncoding=UTF-8 -Dproject.reporting.outputEncoding=UTF-8
 
-# Bước 2: Chạy ứng dụng (SỬA ĐOẠN NÀY)
-# Thay vì openjdk:17-jdk-slim, hãy dùng eclipse-temurin hoặc amazoncorretto
+# Bước 2: Chạy ứng dụng
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dfile.encoding=UTF-8", "-jar", "app.jar"]
