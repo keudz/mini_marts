@@ -1,6 +1,7 @@
 package com.example.demo.dto.response;
 
 public class ProductResponseDTO {
+    private int id;
 
     private String nameProduct;
 
@@ -12,7 +13,8 @@ public class ProductResponseDTO {
 
     private String categoryProduct;
 
-    public ProductResponseDTO(String nameProduct, String descriptionProduct, double priceProduct, int quantity, String categoryProduct) {
+    public ProductResponseDTO(int id, String nameProduct, String descriptionProduct, double priceProduct, int quantity, String categoryProduct) {
+        this.id = id;
         this.nameProduct = nameProduct;
         this.descriptionProduct = descriptionProduct;
         this.priceProduct = priceProduct;
@@ -21,6 +23,14 @@ public class ProductResponseDTO {
     }
 
     public ProductResponseDTO() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNameProduct() {

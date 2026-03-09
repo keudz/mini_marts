@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
         List<ProductResponseDTO> productRes = new ArrayList<>();
         for (Product product : productsOriginal) {
             ProductResponseDTO productResDTO = new ProductResponseDTO();
+            productResDTO.setId(product.getID_PRODUCT());
             productResDTO.setNameProduct(product.getName());
             productResDTO.setPriceProduct(product.getPrice());
             productResDTO.setQuantity(product.getStock());
