@@ -13,13 +13,19 @@ public class ProductResponseDTO {
 
     private String categoryProduct;
 
-    public ProductResponseDTO(int id, String nameProduct, String descriptionProduct, double priceProduct, int quantity, String categoryProduct) {
+    private String imageLink;
+
+    private String subCategoryProduct;
+
+    public ProductResponseDTO(int id, String nameProduct, String descriptionProduct, double priceProduct, int quantity, String categoryProduct, String imageLink, String subCategoryProduct) {
         this.id = id;
         this.nameProduct = nameProduct;
         this.descriptionProduct = descriptionProduct;
         this.priceProduct = priceProduct;
         this.quantity = quantity;
         this.categoryProduct = categoryProduct;
+        this.imageLink = imageLink;
+        this.subCategoryProduct = subCategoryProduct;
     }
 
     public ProductResponseDTO() {
@@ -71,5 +77,20 @@ public class ProductResponseDTO {
 
     public void setCategoryProduct(String categoryProduct) {
         this.categoryProduct = categoryProduct;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    public String getSubCategoryProduct() {
+        return subCategoryProduct;
+    }
+    public void setSubCategoryProduct(String subCategoryProduct) {
+        this.subCategoryProduct = subCategoryProduct;
     }
 }

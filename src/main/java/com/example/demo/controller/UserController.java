@@ -99,7 +99,7 @@ public class UserController {
      @Autowired
     private UserService addPtoductToCart;
      @GetMapping(UrlConstant.ADD_PRODUCT_TO_CART)
-     public Object AddProductToCart(@Valid @RequestParam UserLoginRequestDTO user,@RequestParam String nameProduct,@RequestParam int quantity) {
+     public Object AddProductToCart(@RequestParam String user,@RequestParam String nameProduct,@RequestParam int quantity) {
              return addPtoductToCart.addProductToCart(user,nameProduct,quantity);
      }
 

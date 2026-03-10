@@ -174,3 +174,6 @@ FROM cart_items ci
          JOIN carts c ON ci.ID_CART = c.ID_CART
          JOIN product p on ci.ID_PRODUCT = p.ID_PRODUCT
 WHERE c.ID_USER = 2;
+
+
+SELECT *     FROM product

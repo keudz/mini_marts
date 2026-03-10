@@ -94,19 +94,20 @@ public class UserServiceImpl implements UserService {
             productResDTO.setPriceProduct(product.getPrice());
             productResDTO.setQuantity(product.getStock());
             productResDTO.setCategoryProduct(product.getCategory());
+            productResDTO.setDescriptionProduct(product.getDescription());
             productRes.add(productResDTO);
         }
         return productRes;
     }
 
     @Override
-    public Object addProductToCart(UserLoginRequestDTO user1, String nameProduct, int quantity) {
-        int error =  userValidateServiceImpl.ValidateCheckLogin(user1);
-        if (error == 1) {
-            throw new  ApiException(400,"Field is mandatory");
-        }
+    public Object addProductToCart(String user1, String nameProduct, int quantity) {
+//        int error =  userValidateServiceImpl.ValidateCheckLogin(user1);
+//        if (error == 1) {
+//            throw new  ApiException(400,"Field is mandatory");
+//        }
 
-        User user = userRepository.selectUserByEmailAndPassWord(user1.getEmail(), user1.getPassword());
+        User user = userRepository.selectUserByEmail(user1);
         if(user == null){
             throw new ApiException(400,"Password or email is invalid");
         }

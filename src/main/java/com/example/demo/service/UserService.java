@@ -18,7 +18,7 @@ public interface UserService {
 
     List<ProductResponseDTO> showallproduct();
 
-    Object addProductToCart(UserLoginRequestDTO user,String nameProduct,int quantity);
+    Object addProductToCart(String user,String nameProduct,int quantity);
 
     Object userCheckListProduct(UserLoginRequestDTO user);
 
