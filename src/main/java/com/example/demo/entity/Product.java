@@ -23,6 +23,12 @@ public class Product {
     private double original_price;
 
     private String category;
+//    nhưng Hibernate (công cụ mapping của Spring Boot) có một cơ chế mặc định gọi là Implicit Naming Strategy.
+    @Column(name = "image_link")
+    private String imagelink;
+
+    @Column(name = "sub_category")
+    private String subCategory;
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Cart_Iterm> cartItermList;
@@ -79,6 +85,23 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+
+    public String getImagelink() {
+        return imagelink;
+    }
+
+    public void setImagelink(String imagelink) {
+        this.imagelink = imagelink;
+    }
+
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
     }
 
     public int getID_PRODUCT() {

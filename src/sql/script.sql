@@ -177,3 +177,4 @@ WHERE c.ID_USER = 2;
 
 
 SELECT *     FROM product
+

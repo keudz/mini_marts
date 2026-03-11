@@ -95,6 +95,8 @@ public class UserServiceImpl implements UserService {
             productResDTO.setQuantity(product.getStock());
             productResDTO.setCategoryProduct(product.getCategory());
             productResDTO.setDescriptionProduct(product.getDescription());
+            productResDTO.setImageLink(product.getImagelink());
+            productResDTO.setSubCategoryProduct(product.getSubCategory());
             productRes.add(productResDTO);
         }
         return productRes;
