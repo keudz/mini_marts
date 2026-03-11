@@ -32,6 +32,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Cart_Iterm> cartItermList;
+//    fetch = FetchType.LAZY(Lười biếng): Khi bạn lấy một Product từ database, Hibernate chưa lấy danh sách cartItermList ngay lập tức. Câu lệnh SQL chỉ lấy dữ liệu của bảng product.
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Order_Iterm> orderItermList;

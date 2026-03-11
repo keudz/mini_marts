@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User,Integer> {
        //User là bảng còn Integer là kiểu dữ liệu của id
        //dùng nativeQuery
-       //các câu lệnh khác như select hay delete đều giống như dùng JPQL
+       //đây là các câu lệnh JPQL
        @Query(value = "SELECT u.* From users u where u.ID_USER = :id",nativeQuery = true)
        User selectUserById(@Param("id") int id );
 
