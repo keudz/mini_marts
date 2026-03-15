@@ -24,6 +24,9 @@ public interface UserRepository extends JpaRepository<User,Integer> {
        //dùng JPQL
        @Query("SELECT user From User user where user.email = :email")
        User selectUserByEmail(@Param("email") String email);
+
+       @Query("SELECT u FROM User u WHERE u.password = :password")
+       User selectUserByPassword(@Param("password") String password);
        //dùng JPQL
        @Transactional//dùng khi delete hay update,insest
        @Modifying//annocation này để đánh dấu đấy không phải thao tác select

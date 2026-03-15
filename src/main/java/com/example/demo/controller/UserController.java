@@ -33,13 +33,13 @@ public class UserController {
       private UserService userSevice;
     @PostMapping(UrlConstant.API_V1_CREATE_USER)
     public Object CreateUser(@Valid @RequestBody UserCreateRequestDTO user) {
-     return userSevice.createUser(user);
+     return userSevice.registerUser(user);
     }
 
     @Autowired
     private UserService userLoginAcount;
     @PostMapping(UrlConstant.API_V1_LOGIN_USERS)
-    public Object LoginUser(@Valid @RequestBody UserLoginRequestDTO user) {
+    public boolean LoginUser(@Valid @RequestBody UserLoginRequestDTO user) {
        return userLoginAcount.login(user);
     }
 
@@ -106,14 +106,14 @@ public class UserController {
      @Autowired
      private UserService userCheckListProduct;
      @GetMapping(UrlConstant.USER_CHECK_LIST_PRODUCT)
-    public Object userCheckListProduct(@Valid @RequestBody  UserLoginRequestDTO user) {
-             return  userCheckListProduct.userCheckListProduct(user);
+    public Object userCheckListProduct(@Valid @RequestBody String email) {
+             return  userCheckListProduct.userCheckListProduct(email);
      }
 
      @Autowired
      private UserService userDeleteProduct;
      @DeleteMapping(UrlConstant.USER_DELETE_PRODUCT_BY_NAME)
-    public ResponseEntity<Object> DeleteProductById(@RequestParam UserLoginRequestDTO user, String nameProduct) {
-         return ResponseEntity.ok(userDeleteProduct.userDeleteProduct(user,nameProduct));
+    public ResponseEntity<Object> DeleteProductById(@RequestBody String email, String nameProduct) {
+         return ResponseEntity.ok(userDeleteProduct.userDeleteProduct(email,nameProduct));
      }
 }

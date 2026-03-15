@@ -2,10 +2,10 @@ package com.example.demo.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserLoginRequestDTO {
     @NotBlank(message = "Email field cannot be left blank")
-    @Email(message = "Email is invalid")
     private String email;
     @NotBlank(message = "Password field cannot be left blank")
     private String password;

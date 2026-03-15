@@ -11,6 +11,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleApiException(ApiException e) {
         return ResponseEntity.status(e.getHttpCode()).body(e.getMessage());
     }
+    //Object là kiểu dữ liệu của phần e.getMessage nó có thế là bất cứ kiểu j
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {

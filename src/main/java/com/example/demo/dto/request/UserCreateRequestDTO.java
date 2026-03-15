@@ -5,14 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserCreateRequestDTO {
-    @NotBlank(message = "Email is invalid")//@NotBlank đảm bảo chỗi không chỉ chưa khoảng trắng;
-    @Size(min = 6, max = 50,message = "The email too short")
-    @Email(message = "EMAIL IS INVALID!!")
+    @NotBlank(message = "Email is notblank")//@NotBlank đảm bảo chỗi không chỉ chưa khoảng trắng;
+    @Size(min = 6, max = 50,message = "Email is valid")
+    @Email(message = "Email is valid")
     private String email;
-    @NotBlank(message = "Password is invalid")
-    @Size(min = 6, max = 50,message = "")
+    @NotBlank(message = "Password is notblank")
+    @Size(min = 6, max = 50,message = "password invalid")
     private String password;
-    @NotBlank(message = "Username is invalid")
+    @NotBlank(message = "Username is notblank")
     @Size(min = 6, max = 50,message = "Username is invalid")
     private String fullname;
 

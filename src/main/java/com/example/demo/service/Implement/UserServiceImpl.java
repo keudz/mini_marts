@@ -2,6 +2,7 @@ package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.ExceptionResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
@@ -31,22 +32,22 @@ public class UserServiceImpl implements UserService {
     private ProductRepository productRepository;
     @Autowired
     private CartRepository cartRepository;
-    @Autowired
-    private OrderRepository orderRepository;
+
 
 
     @Override
-    public UserCreateResponseDTO createUser(UserCreateRequestDTO user) {
-        User user1 = userRepository.selectUserByEmail(user.getEmail());
-            if(user1!=null){
-                throw new ApiException(400,"user already exists");
-            }
+    public UserCreateResponseDTO registerUser(UserCreateRequestDTO user) {
+        userValidateServiceImpl.ValidateCheckCreate(user);
         User userCreate = new User();
         userCreate.setFullname(user.getFullname());
         userCreate.setPassword(user.getPassword());
         userCreate.setEmail(user.getEmail());
         userCreate.setRole("Costumer");
         userCreate.setStatus("Active");
+        userRepository.save(userCreate);
+        Cart cart = new Cart();
+        cart.setUser(userCreate);
+        userCreate.setCart(cart);
         userRepository.save(userCreate);
         UserCreateResponseDTO userRes = new UserCreateResponseDTO();
         userRes.setEmail(user.getEmail());
@@ -56,16 +57,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Object login(UserLoginRequestDTO user) {
-        int error = userValidateServiceImpl.ValidateCheckLogin(user);
-        if (error == 1) {
-            throw new ApiException(400,"Field is mandatory");
-        }
-        if(error == 2 || error == 3){
-            throw new ApiException(400,"Password or email must be at least 8 character long");
-        }
-        return "Login Successful";
-    }
+    public boolean login(UserLoginRequestDTO user) {
+       userValidateServiceImpl.ValidateCheckLogin(user);
+        return true;
+}
 
     @Override
     public UserCreateResponseDTO getUserById(int id) {
@@ -103,13 +98,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object addProductToCart(String user1, String nameProduct, int quantity) {
+    public Object addProductToCart(String email, String nameProduct, int quantity) {
 //        int error =  userValidateServiceImpl.ValidateCheckLogin(user1);
 //        if (error == 1) {
 //            throw new  ApiException(400,"Field is mandatory");
 //        }
 
-        User user = userRepository.selectUserByEmail(user1);
+        User user = userRepository.selectUserByEmail(email);
         if(user == null){
             throw new ApiException(400,"Password or email is invalid");
         }
@@ -124,7 +119,6 @@ public class UserServiceImpl implements UserService {
         cart_Iterm.setProduct(product);
         cart_Iterm.setQUANTITY(quantity);
         cart.getCartItermList().add(cart_Iterm);
-
         product.setStock(product.getStock() - quantity);
         productRepository.save(product);
         cartRepository.save(cart);
@@ -133,14 +127,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object userCheckListProduct(UserLoginRequestDTO user) {
-
-        User user1 = userRepository.selectUserByEmailAndPassWord(user.getEmail(), user.getPassword());
-        if (user1 == null) {
+    public Object userCheckListProduct(String email){
+        User userRes = userRepository.selectUserByEmail(email);
+        if (userRes == null) {
             throw new ApiException(404,"user not found");
         }
         List<ProductResponseDTO> productResponseDTOList = new ArrayList<>();
-        Cart cart = user1.getCart();
+        Cart cart = userRes.getCart();
         List<Cart_Iterm> cart_ItermList = cart.getCartItermList();
         for (Cart_Iterm cart_iterm : cart_ItermList) {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
@@ -149,23 +142,18 @@ public class UserServiceImpl implements UserService {
             productResponseDTO.setPriceProduct(cart_iterm.getProduct().getPrice());
             productResponseDTO.setCategoryProduct(cart_iterm.getProduct().getCategory());
             productResponseDTO.setQuantity(cart_iterm.getQUANTITY());
+            productResponseDTO.setImageLink(cart_iterm.getProduct().getImagelink());
+            productResponseDTO.setSubCategoryProduct(cart_iterm.getProduct().getSubCategory());
             productResponseDTOList.add(productResponseDTO);
         }
         return productResponseDTOList;
     }
 
     @Override
-    public Object userDeleteProduct(UserLoginRequestDTO user, String nameProduct) {
-       int error = userValidateServiceImpl.ValidateCheckLogin(user);
-        if (error == 1) {
-            throw new  ApiException(400,"Field is mandatory");
-        }
-        User user1 = userRepository.selectUserByEmailAndPassWord(user.getEmail(), user.getPassword());
-        if (user1 == null) {
-           throw new ApiException(404,"user not found");
-        }
-        Cart cart = user1.getCart();
-        if (cart == null || cart.getCartItermList().isEmpty()) {
+    public Object userDeleteProduct(String email , String nameProduct){
+        User userRes = userRepository.selectUserByEmail(email);
+        Cart cart = userRes.getCart();
+        if (cart == null || cart.getCartItermList().isEmpty()){
            throw new ApiException(200,"cart is empty");
         }
         userRepository.deleteProductByName(nameProduct, cart.getID_CART());
