@@ -30,8 +30,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
        //dùng JPQL
        @Transactional//dùng khi delete hay update,insest
        @Modifying//annocation này để đánh dấu đấy không phải thao tác select
-       @Query("Delete FROM Cart_Iterm p Where p.product.name = :name AND p.cart.ID_CART =:id")
-       int deleteProductByName(@Param ("name") String name,@Param("id") int id);
+       @Query("Delete FROM Cart_Iterm p Where p.product.name = :name AND p.cart.ID_CART =:idCart")
+       int deleteProductByName(@Param ("name") String name,@Param("id") int idCart);
        //kiểu trả về là kiểu int là số row được xoas trong bảng Cart_iterm
 
        @Transactional

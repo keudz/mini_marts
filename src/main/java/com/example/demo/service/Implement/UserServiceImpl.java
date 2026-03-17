@@ -6,9 +6,7 @@ import com.example.demo.dto.response.ExceptionResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
-import com.example.demo.entity.Cart;
-import com.example.demo.entity.Cart_Iterm;
-import com.example.demo.entity.Product;
+import com.example.demo.entity.*;
 import com.example.demo.exception.ApiException;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.OrderRepository;
@@ -17,7 +15,6 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.entity.User; // ✅ đường dẫn đúng của class bạn
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object addProductToCart(String email, String nameProduct, int quantity) {
+    public String addProductToCart(String email, String nameProduct, int quantity) {
 //        int error =  userValidateServiceImpl.ValidateCheckLogin(user1);
 //        if (error == 1) {
 //            throw new  ApiException(400,"Field is mandatory");
@@ -127,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object userCheckListProduct(String email){
+    public List<ProductResponseDTO> userCheckListProductInCart(String email){
         User userRes = userRepository.selectUserByEmail(email);
         if (userRes == null) {
             throw new ApiException(404,"user not found");
@@ -150,7 +147,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object userDeleteProduct(String email , String nameProduct){
+    public String userDeleteProductInCart(String email , String nameProduct){
         User userRes = userRepository.selectUserByEmail(email);
         Cart cart = userRes.getCart();
         if (cart == null || cart.getCartItermList().isEmpty()){
@@ -158,6 +155,21 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteProductByName(nameProduct, cart.getID_CART());
         return "da xoa thanh cong san pham " + nameProduct + "ra khoi gio hang!!";
+    }
+
+    @Override
+     public  Object useOrderAllItemInCart(String email){
+        User useRes = userRepository.selectUserByEmail(email);
+        Cart cart = useRes.getCart();
+        if(cart == null || cart.getCartItermList().isEmpty()){
+            throw new ApiException(200,"cart is empty");
+        }
+        List<Cart_Iterm> cart_ItermList = cart.getCartItermList();
+        List<Orders> ordersList = useRes.getOrder();
+        List<Order_Iterm>  orders_ItermList = ordersList.
+        for (Cart_Iterm cart_Iterm : cart_ItermList) {
+
+        }
     }
 
 }

@@ -99,7 +99,7 @@ public class UserController {
      @Autowired
     private UserService addPtoductToCart;
      @GetMapping(UrlConstant.ADD_PRODUCT_TO_CART)
-     public Object AddProductToCart(@RequestParam String user,@RequestParam String nameProduct,@RequestParam int quantity) {
+     public String AddProductToCart(@RequestParam String user,@RequestParam String nameProduct,@RequestParam int quantity) {
              return addPtoductToCart.addProductToCart(user,nameProduct,quantity);
      }
 
@@ -107,13 +107,13 @@ public class UserController {
      private UserService userCheckListProduct;
      @GetMapping(UrlConstant.USER_CHECK_LIST_PRODUCT)
     public Object userCheckListProduct(@Valid @RequestBody String email) {
-             return  userCheckListProduct.userCheckListProduct(email);
+             return  userCheckListProduct.userCheckListProductInCart(email);
      }
 
      @Autowired
      private UserService userDeleteProduct;
      @DeleteMapping(UrlConstant.USER_DELETE_PRODUCT_BY_NAME)
-    public ResponseEntity<Object> DeleteProductById(@RequestBody String email, String nameProduct) {
-         return ResponseEntity.ok(userDeleteProduct.userDeleteProduct(email,nameProduct));
+    public ResponseEntity<String> DeleteProductById(@RequestBody String email, String nameProduct) {
+         return ResponseEntity.ok(userDeleteProduct.userDeleteProductInCart(email,nameProduct));
      }
 }

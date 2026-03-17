@@ -19,10 +19,16 @@ public interface UserService {
 
     List<ProductResponseDTO> showallproduct();
 
-    Object addProductToCart(String user,String nameProduct,int quantity);
+    String addProductToCart(String email,String nameProduct,int quantity);
 
-    Object userCheckListProduct(String user);
+    List<ProductResponseDTO> userCheckListProductInCart(String user);
 
-    Object userDeleteProduct(String email ,String nameProduct);
+    String userDeleteProductInCart(String email ,String nameProduct);
+
+    Object useOrderAllItemInCart(String email);
+
+    Object useGetProductInCart(String email,List<Integer> listProduct );
+
+
 
 }
