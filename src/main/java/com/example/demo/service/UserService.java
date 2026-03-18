@@ -25,9 +25,9 @@ public interface UserService {
 
     String userDeleteProductInCart(String email ,String nameProduct);
 
-    Object useOrderAllItemInCart(String email);
+    Object useOrderAllItemInCartToOrder(String email);
 
-    Object useGetProductInCart(String email,List<Integer> listProduct );
+    Object useOrderSomeItemFromCartToOrder(String email,List<Product> listProduct );
 
 
 

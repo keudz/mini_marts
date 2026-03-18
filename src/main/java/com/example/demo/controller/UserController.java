@@ -116,4 +116,18 @@ public class UserController {
     public ResponseEntity<String> DeleteProductById(@RequestBody String email, String nameProduct) {
          return ResponseEntity.ok(userDeleteProduct.userDeleteProductInCart(email,nameProduct));
      }
+
+     @Autowired
+    private UserService userOrderAllItemInCart;
+     @PostMapping(UrlConstant.USER_ORDER_ALL_ITEM_IN_CART)
+     public  Object useOrderAllItemInCart(String email){
+         return userOrderAllItemInCart.useOrderAllItemInCartToOrder(email);
+     }
+
+     @Autowired
+     private UserService useOrderSomeItemInCart;
+    @PostMapping(UrlConstant.USER_ORDER_SOME_ITEM_IN_CART)
+    public  Object useOrderAllItemInCart(String email,List<Product> listProduct){
+        return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(email,listProduct);
+    }
 }

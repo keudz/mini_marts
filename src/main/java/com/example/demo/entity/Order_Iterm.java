@@ -11,9 +11,9 @@ public class Order_Iterm {
     private int id;
 
 
-    private int ORIGINAL_PRICE;
+    private double ORIGINAL_PRICE;
 
-    private int PRICE;
+    private double PRICE;
 
     @ManyToOne
     @JoinColumn(name = "ID_PRODUCT")
@@ -40,19 +40,19 @@ public class Order_Iterm {
         this.id = id;
     }
 
-    public int getORIGINAL_PRICE() {
+    public double getORIGINAL_PRICE() {
         return ORIGINAL_PRICE;
     }
 
-    public void setORIGINAL_PRICE(int ORIGINAL_PRICE) {
+    public void setORIGINAL_PRICE(double ORIGINAL_PRICE) {
         this.ORIGINAL_PRICE = ORIGINAL_PRICE;
     }
 
-    public int getPRICE() {
+    public double getPRICE() {
         return PRICE;
     }
 
-    public void setPRICE(int PRICE) {
+    public void setPRICE(double PRICE) {
         this.PRICE = PRICE;
     }
 

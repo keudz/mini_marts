@@ -2,16 +2,11 @@ package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
-import com.example.demo.dto.response.ExceptionResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
-import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ApiException;
-import com.example.demo.repository.CartRepository;
-import com.example.demo.repository.OrderRepository;
-import com.example.demo.repository.ProductRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +24,10 @@ public class UserServiceImpl implements UserService {
     private ProductRepository productRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private CartItemRepository cartItemRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
 
@@ -158,18 +157,137 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-     public  Object useOrderAllItemInCart(String email){
-        User useRes = userRepository.selectUserByEmail(email);
-        Cart cart = useRes.getCart();
-        if(cart == null || cart.getCartItermList().isEmpty()){
-            throw new ApiException(200,"cart is empty");
-        }
-        List<Cart_Iterm> cart_ItermList = cart.getCartItermList();
-        List<Orders> ordersList = useRes.getOrder();
-        List<Order_Iterm>  orders_ItermList = ordersList.
-        for (Cart_Iterm cart_Iterm : cart_ItermList) {
+    public Object useOrderAllItemInCartToOrder(String email) {
 
+        User userRes = userRepository.selectUserByEmail(email);
+        if (userRes == null) {
+            throw new ApiException(404, "User not found");
         }
+
+        Cart cart = userRes.getCart();
+        if (cart == null || cart.getCartItermList().isEmpty()) {
+            throw new ApiException(400, "Cart is empty");
+        }
+
+        List<Cart_Iterm> cartItemList = cart.getCartItermList();
+
+        // 1. Tạo order mới
+        Orders order = new Orders();
+        order.setUser(userRes);
+        order.setSTATUS("PENDING");
+        order.setDESCRIPTION("Order from cart");
+
+        List<Order_Iterm> orderItemList = new ArrayList<>();
+
+        int totalAmount = 0;
+
+        // 2. Convert CartItem -> OrderItem
+        for (Cart_Iterm cartItem : cartItemList) {
+
+            Order_Iterm orderItem = new Order_Iterm();
+
+            orderItem.setProduct(cartItem.getProduct());
+
+            double price = cartItem.getProduct().getPrice(); // giả sử Product có getPrice()
+
+            orderItem.setPRICE(price);
+            orderItem.setPRICE(price * cartItem.getQUANTITY());
+
+            // set quan hệ
+            orderItem.setOrder(order);
+
+            totalAmount += orderItem.getPRICE();
+
+            orderItemList.add(orderItem);
+        }
+
+
+        order.setOrderItermList(orderItemList);
+
+
+        order.setTATAL_AMOUNT(String.valueOf(totalAmount));
+
+        // 5. save order (cascade sẽ save orderItem)
+        orderRepository.save(order);
+
+        // 6. clear cart
+        cartItemRepository.deleteAll(cartItemList);
+
+        return order;
+    }
+
+    @Override
+    public Object useOrderSomeItemFromCartToOrder(String email, List<Product> listProduct) {
+
+        User userRes = userRepository.selectUserByEmail(email);
+        if (userRes == null) {
+            throw new ApiException(404, "User not found");
+        }
+
+        Cart cart = userRes.getCart();
+        if (cart == null || cart.getCartItermList().isEmpty()) {
+            throw new ApiException(400, "Cart is empty");
+        }
+
+        List<Cart_Iterm> cartItemList = cart.getCartItermList();
+
+        // Lọc những cartItem có product nằm trong listProduct
+        List<Cart_Iterm> selectedItems = new ArrayList<>();
+
+        for (Cart_Iterm cartItem : cartItemList) {
+            for (Product p : listProduct) {
+                if (cartItem.getProduct().getID_PRODUCT() == p.getID_PRODUCT()) {
+                    selectedItems.add(cartItem);
+                    break;
+                }
+            }
+        }
+
+        if (selectedItems.isEmpty()) {
+            throw new ApiException(400, "No matching products in cart");
+        }
+
+        // 1. Tạo order
+        Orders order = new Orders();
+        order.setUser(userRes);
+        order.setSTATUS("PENDING");
+        order.setDESCRIPTION("Order selected items");
+
+        List<Order_Iterm> orderItemList = new ArrayList<>();
+        int totalAmount = 0;
+
+        // 2. Convert sang OrderItem
+        for (Cart_Iterm cartItem : selectedItems) {
+
+            Order_Iterm orderItem = new Order_Iterm();
+
+            orderItem.setProduct(cartItem.getProduct());
+
+            double price = cartItem.getProduct().getPrice();
+
+            orderItem.setORIGINAL_PRICE(price);
+            orderItem.setPRICE(price * cartItem.getQUANTITY());
+
+            orderItem.setOrder(order); // 🔥 QUAN TRỌNG
+
+            totalAmount += orderItem.getPRICE();
+
+            orderItemList.add(orderItem);
+        }
+
+        // 3. Gán list
+        order.setOrderItermList(orderItemList);
+
+        // 4. Tổng tiền
+        order.setTATAL_AMOUNT(String.valueOf(totalAmount));
+
+        // 5. Lưu
+        orderRepository.save(order);
+
+        // 6. Xóa những item đã order khỏi cart
+        cartItemRepository.deleteAll(selectedItems);
+
+        return order;
     }
 
 }
