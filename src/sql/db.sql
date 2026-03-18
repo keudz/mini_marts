@@ -545,6 +545,11 @@ TRUNCATE TABLE product;#xoá tất cả dữ liệu của table product
 DROP TABLE carts;
 DROP TABLE product;
 
+SELECT
+    ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Used_MB
+FROM information_schema.tables
+WHERE table_schema = 'shoppingonline';
+
 
 
 
