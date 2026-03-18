@@ -120,14 +120,14 @@ public class UserController {
      @Autowired
     private UserService userOrderAllItemInCart;
      @PostMapping(UrlConstant.USER_ORDER_ALL_ITEM_IN_CART)
-     public  Object useOrderAllItemInCart(String email){
+     public  Object useOrderAllItemInCart(@RequestBody String email){
          return userOrderAllItemInCart.useOrderAllItemInCartToOrder(email);
      }
 
      @Autowired
      private UserService useOrderSomeItemInCart;
     @PostMapping(UrlConstant.USER_ORDER_SOME_ITEM_IN_CART)
-    public  Object useOrderAllItemInCart(String email,List<Product> listProduct){
+    public  Object useOrderAllItemInCart(@RequestBody String email,List<Product> listProduct){
         return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(email,listProduct);
     }
 }
