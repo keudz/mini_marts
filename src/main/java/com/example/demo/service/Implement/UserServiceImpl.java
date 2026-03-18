@@ -216,8 +216,9 @@ public class UserServiceImpl implements UserService {
         return order;
     }
 
+
     @Override
-    public Object useOrderSomeItemFromCartToOrder(String email, List<Product> listProduct) {
+    public Object useOrderSomeItemFromCartToOrder(String email, List<String> listProductName) {
 
         User userRes = userRepository.selectUserByEmail(email);
         if (userRes == null) {
@@ -227,6 +228,16 @@ public class UserServiceImpl implements UserService {
         Cart cart = userRes.getCart();
         if (cart == null || cart.getCartItermList().isEmpty()) {
             throw new ApiException(400, "Cart is empty");
+        }
+
+        // 🔥 Lấy Product từ list tên
+        List<Product> listProduct = new ArrayList<>();
+        for (String name : listProductName) {
+            Product product = productRepository.findByName(name); // tự viết hàm này
+            if (product == null) {
+                throw new ApiException(404, "Product not found: " + name);
+            }
+            listProduct.add(product);
         }
 
         List<Cart_Iterm> cartItemList = cart.getCartItermList();

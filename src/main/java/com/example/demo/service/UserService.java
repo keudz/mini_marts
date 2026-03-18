@@ -27,7 +27,7 @@ public interface UserService {
 
     Object useOrderAllItemInCartToOrder(String email);
 
-    Object useOrderSomeItemFromCartToOrder(String email,List<Product> listProduct );
+    Object useOrderSomeItemFromCartToOrder(String email,List<String> listProduct );
 
 
 
