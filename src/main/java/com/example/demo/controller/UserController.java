@@ -5,6 +5,7 @@ import com.example.demo.constant.UrlConstant;
 import com.example.demo.dto.request.Stringg;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
@@ -127,7 +128,7 @@ public class UserController {
      @Autowired
      private UserService useOrderSomeItemInCart;
     @PostMapping(UrlConstant.USER_ORDER_SOME_ITEM_IN_CART)
-    public  Object useOrderAllItemInCart(@RequestBody String email,List<String> listProduct){
-        return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(email,listProduct);
+    public  Object useOrderAllItemInCart(@RequestBody OrderResponceDTO orderResponceDTO){
+        return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(orderResponceDTO.getEmail(),orderResponceDTO.getListProduct());
     }
 }
