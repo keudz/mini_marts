@@ -11,7 +11,7 @@ import com.example.demo.entity.User;
 import java.util.List;
 
 public interface UserService {
-    boolean login(UserLoginRequestDTO user);
+    UserCreateResponseDTO login(UserLoginRequestDTO user);
 
     UserCreateResponseDTO registerUser (UserCreateRequestDTO user);
 

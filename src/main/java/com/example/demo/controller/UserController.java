@@ -40,7 +40,7 @@ public class UserController {
     @Autowired
     private UserService userLoginAcount;
     @PostMapping(UrlConstant.API_V1_LOGIN_USERS)
-    public boolean LoginUser(@Valid @RequestBody UserLoginRequestDTO user) {
+    public UserCreateResponseDTO LoginUser(@Valid @RequestBody UserLoginRequestDTO user) {
        return userLoginAcount.login(user);
     }
 

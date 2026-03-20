@@ -2,6 +2,8 @@ package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
 import com.example.demo.repository.UserRepository;
@@ -15,14 +17,20 @@ public class UserValidateServiceImpl implements UserValidateSevice {
     UserRepository userRepository;
 
     @Override
-    public void ValidateCheckLogin(UserLoginRequestDTO user) {
+    public UserCreateResponseDTO ValidateCheckLogin(UserLoginRequestDTO user) {
         User userRes = userRepository.selectUserByEmail(user.getEmail());
+        UserCreateResponseDTO userCreateResponseDTO = new UserCreateResponseDTO();
         if (userRes == null) {
             throw new ApiException(404, "Use not found !");
         }
         if (!userRes.getPassword().equals(user.getPassword())) {
             throw new ApiException(400, "Invalid email or password");
         }
+        userCreateResponseDTO.setEmail(userRes.getEmail());
+        userCreateResponseDTO.setName(userRes.getFullname());
+        return userCreateResponseDTO;
+
+
 
     }
 
