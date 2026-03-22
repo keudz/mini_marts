@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.constant.UrlConstant;
+import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.Stringg;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
@@ -106,9 +107,9 @@ public class UserController {
 
      @Autowired
      private UserService userCheckListProduct;
-     @GetMapping(UrlConstant.USER_CHECK_LIST_PRODUCT)
-    public Object userCheckListProduct(@Valid @RequestBody String email) {
-             return  userCheckListProduct.userCheckListProductInCart(email);
+     @PostMapping(UrlConstant.USER_CHECK_LIST_PRODUCT)
+    public Object userCheckListProduct(@Valid @RequestBody EmailRequest emailRequest) {
+             return  userCheckListProduct.userCheckListProductInCart(emailRequest);
      }
 
      @Autowired

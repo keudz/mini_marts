@@ -1,5 +1,6 @@
 package com.example.demo.service.Implement;
 
+import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
@@ -123,8 +124,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ProductResponseDTO> userCheckListProductInCart(String email){
-        User userRes = userRepository.selectUserByEmail(email);
+    public List<ProductResponseDTO> userCheckListProductInCart(EmailRequest email){
+        User userRes = userRepository.selectUserByEmail(email.getEmail());
         if (userRes == null) {
             throw new ApiException(404,"user not found");
         }

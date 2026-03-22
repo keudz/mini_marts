@@ -26,6 +26,7 @@ public class UserValidateServiceImpl implements UserValidateSevice {
         if (!userRes.getPassword().equals(user.getPassword())) {
             throw new ApiException(400, "Invalid email or password");
         }
+
         userCreateResponseDTO.setEmail(userRes.getEmail());
         userCreateResponseDTO.setName(userRes.getFullname());
         return userCreateResponseDTO;
