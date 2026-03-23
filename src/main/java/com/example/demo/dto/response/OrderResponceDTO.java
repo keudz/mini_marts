@@ -1,33 +1,23 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.Product;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
+@Getter
+@Setter
 
 public class OrderResponceDTO {
-        private String email;
-        private List<String> listProduct;
 
-        public OrderResponceDTO(List<String> listProduct, String email) {
-            this.listProduct = listProduct;
-            this.email = email;
-        }
+   private String des;
 
-        public OrderResponceDTO() {
-        }
+   private String status;
 
-        public List<String> getListProduct() {
-            return listProduct;
-        }
+   private double total_amount;
 
-        public void setListProduct(List<String> listProduct) {
-            this.listProduct = listProduct;
-        }
+   private List<ProductResponseDTO> product;
 
-        public String getEmail() {
-            return email;
-        }
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
+}
 

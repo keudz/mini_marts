@@ -1,6 +1,5 @@
 package com.example.demo.service.Implement;
 
-import com.example.demo.dto.request.Stringg;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
@@ -32,23 +31,23 @@ public class AdminSeviceImpl implements AdminService {
       return userRepository.findAll();
   }
 
-  @Override
-    public UserResponDTO blockUser(Stringg name) {
-      UserResponDTO userResponDTO = new UserResponDTO();
-      int rowEffect  = userRepository.blockUserStatus(name.getName());
-      if(rowEffect <= 0){
-       throw new ApiException(404,"user not found");
-
-      }
-      User user =  userRepository.selectUserByName(name.getName());
-      userResponDTO.setID_USER(user.getID_USER());
-      userResponDTO.setEmail(user.getEmail());
-     userResponDTO.setFullname(user.getFullname());
-     userResponDTO.setRole(user.getRole());
-     userResponDTO.setStatus(user.getStatus());
-
-      return userResponDTO;
-  }
+//  @Override
+//    public UserResponDTO blockUser(String name) {
+//      UserResponDTO userResponDTO = new UserResponDTO();
+//      int rowEffect  = userRepository.blockUserStatus(name.getName());
+//      if(rowEffect <= 0){
+//       throw new ApiException(404,"user not found");
+//
+//      }
+//      User user =  userRepository.selectUserByName(name.getName());
+//      userResponDTO.setID_USER(user.getID_USER());
+//      userResponDTO.setEmail(user.getEmail());
+//     userResponDTO.setFullname(user.getFullname());
+//     userResponDTO.setRole(user.getRole());
+//     userResponDTO.setStatus(user.getStatus());
+//
+//      return userResponDTO;
+//  }
 
 
   @Override

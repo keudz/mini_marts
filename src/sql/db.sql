@@ -1,9 +1,68 @@
 -- Truy vấn tạo ra database
-create database shoppingonline;
+#create database shoppingonline;
 
-USE shoppingonline;
-#Bài 18
--- Truy vấn tạo bảng user
+USE mini_mart_dev;
+
+CREATE TABLE users (
+                       ID_USER INT AUTO_INCREMENT PRIMARY KEY,
+                       email VARCHAR(255) UNIQUE NOT NULL,
+                       password VARCHAR(255) NOT NULL,
+                       fullname VARCHAR(255) NOT NULL,
+                       status VARCHAR(50) NOT NULL,
+                       role VARCHAR(50) NOT NULL
+);
+INSERT INTO users (ID_USER, email, password, fullname, status, role) VALUES
+                                                                         (1, 'admin1@gmail.com', '123456', 'Nguyễn Quản Trị', 'active', 'admin'),
+                                                                         (2, 'manager@gmail.com', '123456', 'Trần Quản Lý', 'active', 'admin'),
+                                                                         (3, 'user3@gmail.com', '123456', 'Lê Văn Ba', 'active', 'user'),
+                                                                         (4, 'user4@gmail.com', '123456', 'Phạm Thị Bốn', 'inactive', 'user'),
+                                                                         (5, 'user5@gmail.com', '123456', 'Hoàng Văn Năm', 'active', 'user'),
+                                                                         (6, 'user6@gmail.com', '123456', 'Đặng Thị Sáu', 'active', 'user'),
+                                                                         (7, 'user7@gmail.com', '123456', 'Bùi Văn Bảy', 'active', 'user'),
+                                                                         (8, 'user8@gmail.com', '123456', 'Vũ Thị Tám', 'banned', 'user'),
+                                                                         (9, 'user9@gmail.com', '123456', 'Phan Văn Chín', 'active', 'user'),
+                                                                         (10, 'user10@gmail.com', '123456', 'Đỗ Thị Mười', 'active', 'user'),
+                                                                         (11, 'user11@gmail.com', '123456', 'Ngô Văn Mười Một', 'active', 'user'),
+                                                                         (12, 'user12@gmail.com', '123456', 'Dương Thị Mười Hai', 'active', 'user'),
+                                                                         (13, 'user13@gmail.com', '123456', 'Lý Văn Mười Ba', 'active', 'user'),
+                                                                         (14, 'user14@gmail.com', '123456', 'Trần Văn Tùng', 'active', 'user'),
+                                                                         (15, 'user15@gmail.com', '123456', 'Lê Thị Thu', 'active', 'user'),
+                                                                         (16, 'user16@gmail.com', '123456', 'Nguyễn Hoàng Oanh', 'active', 'user'),
+                                                                         (17, 'user17@gmail.com', '123456', 'Phạm Tấn Tài', 'active', 'user'),
+                                                                         (18, 'user18@gmail.com', '123456', 'Võ Trọng Nghĩa', 'inactive', 'user'),
+                                                                         (19, 'user19@gmail.com', '123456', 'Đinh Thị Mỹ Linh', 'active', 'user'),
+                                                                         (20, 'user20@gmail.com', '123456', 'Trịnh Quốc Cường', 'active', 'user'),
+                                                                         (21, 'user21@gmail.com', '123456', 'Bùi Thanh Trúc', 'active', 'user'),
+                                                                         (22, 'user22@gmail.com', '123456', 'Lương Tuấn Kiệt', 'active', 'user'),
+                                                                         (23, 'user23@gmail.com', '123456', 'Vương Kim Liên', 'active', 'user'),
+                                                                         (24, 'user24@gmail.com', '123456', 'Lâm Chấn Khang', 'active', 'user'),
+                                                                         (25, 'user25@gmail.com', '123456', 'Mai Phương Thúy', 'banned', 'user'),
+                                                                         (26, 'user26@gmail.com', '123456', 'Đào Duy Từ', 'active', 'user'),
+                                                                         (27, 'user27@gmail.com', '123456', 'Châu Tinh Trì', 'active', 'user'),
+                                                                         (28, 'user28@gmail.com', '123456', 'Hồ Tấn Tài', 'active', 'user'),
+                                                                         (29, 'user29@gmail.com', '123456', 'Quách Ngọc Ngoan', 'active', 'user'),
+                                                                         (30, 'user30@gmail.com', '123456', 'Trương Bá Chi', 'active', 'user'),
+                                                                         (31, 'user31@gmail.com', '123456', 'Nguyễn Quang Hải', 'active', 'user'),
+                                                                         (32, 'user32@gmail.com', '123456', 'Đoàn Văn Hậu', 'active', 'user'),
+                                                                         (33, 'user33@gmail.com', '123456', 'Bùi Tiến Dũng', 'inactive', 'user'),
+                                                                         (34, 'user34@gmail.com', '123456', 'Quế Ngọc Hải', 'active', 'user'),
+                                                                         (35, 'user35@gmail.com', '123456', 'Vũ Văn Thanh', 'active', 'user'),
+                                                                         (36, 'user36@gmail.com', '123456', 'Phan Văn Đức', 'active', 'user'),
+                                                                         (37, 'user37@gmail.com', '123456', 'Hà Đức Chinh', 'active', 'user'),
+                                                                         (38, 'user38@gmail.com', '123456', 'Nguyễn Tiến Linh', 'active', 'user'),
+                                                                         (39, 'user39@gmail.com', '123456', 'Phạm Tuấn Hải', 'active', 'user'),
+                                                                         (40, 'user40@gmail.com', '123456', 'Đỗ Hùng Dũng', 'active', 'user'),
+                                                                         (41, 'user41@gmail.com', '123456', 'Nguyễn Hoàng Đức', 'banned', 'user'),
+                                                                         (42, 'user42@gmail.com', '123456', 'Nguyễn Văn Toàn', 'active', 'user'),
+                                                                         (43, 'user43@gmail.com', '123456', 'Lương Xuân Trường', 'active', 'user'),
+                                                                         (44, 'user44@gmail.com', '123456', 'Nguyễn Tuấn Anh', 'active', 'user'),
+                                                                         (45, 'user45@gmail.com', '123456', 'Trần Đình Trọng', 'active', 'user'),
+                                                                         (46, 'user46@gmail.com', '123456', 'Đặng Văn Lâm', 'active', 'user'),
+                                                                         (47, 'user47@gmail.com', '123456', 'Nguyễn Filip', 'inactive', 'user'),
+                                                                         (48, 'user48@gmail.com', '123456', 'Bùi Hoàng Việt Anh', 'active', 'user'),
+                                                                         (49, 'user49@gmail.com', '123456', 'Phan Tuấn Tài', 'active', 'user'),
+                                                                         (50, 'user50@gmail.com', '123456', 'Nguyễn Thanh Bình', 'active', 'user');
+
 
 
 
@@ -448,11 +507,12 @@ create table orders(
     DESCRIPTION VARCHAR(150),
     STATUS VARCHAR(150),
     TOTAL_AMOUNT NUMERIC(19,6),
-    USER_ID INT
+    ID_USER INT NOT NULL,
+    FOREIGN KEY (ID_USER) REFERENCES users(ID_USER)
 
 );
 
-INSERT INTO orders (ID_ORDER, description, status, total_amount, user_id) VALUES
+INSERT INTO orders (ID_ORDER, description, status, total_amount, id_user) VALUES
           (1, 'Đơn hàng tháng 7', 'delivered', 1688000, 1),
           (2, NULL, 'processing', 897000, 2),
           (13, 'Đơn hàng Flash Sale', 'delivered', 890000, 14),
@@ -541,14 +601,19 @@ INSERT INTO oders_items (id, ID_PRODUCT, ID_ORDER, original_price, price) VALUES
 SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
 
 DROP TABLE product ;
-TRUNCATE TABLE product;#xoá tất cả dữ liệu của table product
+TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
+TRUNCATE TABLE orders;
+TRUNCATE TABLE oders_items;
+TRUNCATE TABLE orders;
+
 DROP TABLE carts;
 DROP TABLE product;
+DROP TABLE orders;
 
-SELECT
-    ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Used_MB
-FROM information_schema.tables
-WHERE table_schema = 'shoppingonline';
+# SELECT
+#     ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Used_MB
+# FROM information_schema.tables
+# WHERE table_schema = 'shoppingonline';
 
 
 

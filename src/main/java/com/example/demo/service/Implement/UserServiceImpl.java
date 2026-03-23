@@ -1,8 +1,10 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.EmailRequest;
+import com.example.demo.dto.request.OrderRequestDTO;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.entity.*;
@@ -132,8 +134,10 @@ public class UserServiceImpl implements UserService {
         List<ProductResponseDTO> productResponseDTOList = new ArrayList<>();
         Cart cart = userRes.getCart();
         List<Cart_Iterm> cart_ItermList = cart.getCartItermList();
+        int i = 0;
         for (Cart_Iterm cart_iterm : cart_ItermList) {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setId(i++);
             productResponseDTO.setNameProduct(cart_iterm.getProduct().getName());
             productResponseDTO.setDescriptionProduct(cart_iterm.getProduct().getDescription());
             productResponseDTO.setPriceProduct(cart_iterm.getProduct().getPrice());
@@ -158,9 +162,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object useOrderAllItemInCartToOrder(String email) {
-
-        User userRes = userRepository.selectUserByEmail(email);
+    public Object useOrderAllItemInCartToOrder(EmailRequest email) {
+        System.out.println("DEBUG - Email nhan vao: " + email);
+        User userRes = userRepository.selectUserByEmail(email.getEmail());
         if (userRes == null) {
             throw new ApiException(404, "User not found");
         }
@@ -172,7 +176,8 @@ public class UserServiceImpl implements UserService {
 
         List<Cart_Iterm> cartItemList = cart.getCartItermList();
 
-        // 1. Tạo order mới
+        OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
+
         Orders order = new Orders();
         order.setUser(userRes);
         order.setSTATUS("PENDING");
@@ -206,7 +211,8 @@ public class UserServiceImpl implements UserService {
         order.setOrderItermList(orderItemList);
 
 
-        order.setTATAL_AMOUNT(String.valueOf(totalAmount));
+        order.setTATAL_AMOUNT(totalAmount);
+
 
         // 5. save order (cascade sẽ save orderItem)
         orderRepository.save(order);
@@ -214,14 +220,32 @@ public class UserServiceImpl implements UserService {
         // 6. clear cart
         cartItemRepository.deleteAll(cartItemList);
 
-        return order;
+
+
+        List<ProductResponseDTO> productList = new ArrayList<>();
+        for( Order_Iterm orderIterm : order.getOrderItermList()) {
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+
+            productResponseDTO.setId(orderIterm.getProduct().getID_PRODUCT());
+            productResponseDTO.setPriceProduct(orderIterm.getProduct().getPrice());
+            productResponseDTO.setDescriptionProduct(orderIterm.getProduct().getDescription());
+            productResponseDTO.setCategoryProduct(orderIterm.getProduct().getCategory());
+            productResponseDTO.setImageLink(orderIterm.getProduct().getImagelink());
+            productResponseDTO.setNameProduct(orderIterm.getProduct().getName());
+            productList.add(productResponseDTO);
+        }
+        orderResponceDTO.setDes(order.getDESCRIPTION());
+        orderResponceDTO.setStatus(order.getSTATUS());
+        orderResponceDTO.setTotal_amount(order.getTATAL_AMOUNT());
+        orderResponceDTO.setProduct(productList);
+        return orderResponceDTO;
     }
 
 
     @Override
-    public Object useOrderSomeItemFromCartToOrder(String email, List<String> listProductName) {
+    public Object useOrderSomeItemFromCartToOrder(OrderRequestDTO orderRequestDTO) {
 
-        User userRes = userRepository.selectUserByEmail(email);
+        User userRes = userRepository.selectUserByEmail(orderRequestDTO.getEmail());
         if (userRes == null) {
             throw new ApiException(404, "User not found");
         }
@@ -233,7 +257,7 @@ public class UserServiceImpl implements UserService {
 
         // 🔥 Lấy Product từ list tên
         List<Product> listProduct = new ArrayList<>();
-        for (String name : listProductName) {
+        for (String name : orderRequestDTO.getListProduct()) {
             Product product = productRepository.findByName(name); // tự viết hàm này
             if (product == null) {
                 throw new ApiException(404, "Product not found: " + name);
@@ -291,7 +315,7 @@ public class UserServiceImpl implements UserService {
         order.setOrderItermList(orderItemList);
 
         // 4. Tổng tiền
-        order.setTATAL_AMOUNT(String.valueOf(totalAmount));
+        order.setTATAL_AMOUNT(totalAmount);
 
         // 5. Lưu
         orderRepository.save(order);

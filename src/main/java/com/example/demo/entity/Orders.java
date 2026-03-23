@@ -16,7 +16,7 @@ public class Orders {
 
     private String STATUS;
 
-    private String TATAL_AMOUNT;
+    private double TATAL_AMOUNT;
 
     private int USER_ID;
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -29,7 +29,7 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(int ID_ORDER, String DESCRIPTION, String STATUS, int USER_ID, String TATAL_AMOUNT) {
+    public Orders(int ID_ORDER, String DESCRIPTION, String STATUS, int USER_ID, double TATAL_AMOUNT) {
         this.ID_ORDER = ID_ORDER;
         this.DESCRIPTION = DESCRIPTION;
         this.STATUS = STATUS;
@@ -61,11 +61,11 @@ public class Orders {
         this.STATUS = STATUS;
     }
 
-    public String getTATAL_AMOUNT() {
+    public double getTATAL_AMOUNT() {
         return TATAL_AMOUNT;
     }
 
-    public void setTATAL_AMOUNT(String TATAL_AMOUNT) {
+    public void setTATAL_AMOUNT(double TATAL_AMOUNT) {
         this.TATAL_AMOUNT = TATAL_AMOUNT;
     }
 
