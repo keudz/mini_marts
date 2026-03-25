@@ -4,6 +4,7 @@ import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.OrderRequestDTO;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.AddProductInCartResponseDTO;
 import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
@@ -31,6 +32,8 @@ public class UserServiceImpl implements UserService {
     private CartItemRepository cartItemRepository;
     @Autowired
     private OrderRepository orderRepository;
+
+
 
 
 
@@ -97,32 +100,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addProductToCart(String email, String nameProduct, int quantity) {
-//        int error =  userValidateServiceImpl.ValidateCheckLogin(user1);
-//        if (error == 1) {
-//            throw new  ApiException(400,"Field is mandatory");
-//        }
-
+    public AddProductInCartResponseDTO addProductInCart (String email, String nameProduct, int quantity) {
         User user = userRepository.selectUserByEmail(email);
         if(user == null){
-            throw new ApiException(400,"Password or email is invalid");
+            throw new  ApiException(404,"user not found");
         }
-
         Product product = productRepository.findByName(nameProduct);
         if (product == null) {
             throw new ApiException(404,"product not found");
         }
+        Cart_Iterm cart_ItermTemp = cartItemRepository.seletByIdProduct(product.getID_PRODUCT());
         Cart cart = user.getCart();
         Cart_Iterm cart_Iterm = new Cart_Iterm();
-        cart_Iterm.setCart(cart);
-        cart_Iterm.setProduct(product);
-        cart_Iterm.setQUANTITY(quantity);
-        cart.getCartItermList().add(cart_Iterm);
+        if(cart.getCartItermList().contains(cart_ItermTemp)){
+            cart_ItermTemp.setQUANTITY(cart_ItermTemp.getQUANTITY() + quantity);
+        }
+        else{
+            cart_Iterm.setCart(cart);
+            cart_Iterm.setProduct(product);
+            cart_Iterm.setQUANTITY(quantity);
+            cart.getCartItermList().add(cart_Iterm);
+        }
         product.setStock(product.getStock() - quantity);
         productRepository.save(product);
         cartRepository.save(cart);
 
-        return "đã thêm sản phẩm " + nameProduct + "vào giỏ hàng!!";
+        AddProductInCartResponseDTO addProductInCartResponseDTO = new AddProductInCartResponseDTO();
+        addProductInCartResponseDTO.setNameProduct(nameProduct);
+        addProductInCartResponseDTO.setQuantity(quantity);
+
+        return addProductInCartResponseDTO;
     }
 
     @Override
@@ -218,7 +225,7 @@ public class UserServiceImpl implements UserService {
         orderRepository.save(order);
 
         // 6. clear cart
-        cartItemRepository.deleteAll(cartItemList);
+        cartItemRepository.deleteAllByCartId(cart.getID_CART());
 
 
 

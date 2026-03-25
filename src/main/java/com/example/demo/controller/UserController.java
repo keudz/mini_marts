@@ -6,6 +6,7 @@ import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.OrderRequestDTO;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.AddProductInCartResponseDTO;
 import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
@@ -94,9 +95,9 @@ public class UserController {
 
      @Autowired
     private UserService addPtoductToCart;
-     @GetMapping(UrlConstant.ADD_PRODUCT_TO_CART)
-     public String AddProductToCart(@RequestParam String user,@RequestParam String nameProduct,@RequestParam int quantity) {
-             return addPtoductToCart.addProductToCart(user,nameProduct,quantity);
+     @PostMapping (UrlConstant.ADD_PRODUCT_TO_CART)
+     public AddProductInCartResponseDTO AddProductToCart(@RequestParam String email, @RequestParam String nameProduct, @RequestParam int quantity) {
+             return addPtoductToCart.addProductInCart(email,nameProduct,quantity);
      }
 
      @Autowired

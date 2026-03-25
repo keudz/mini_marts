@@ -4,6 +4,7 @@ import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.OrderRequestDTO;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.AddProductInCartResponseDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 
@@ -18,7 +19,7 @@ public interface UserService {
 
     List<ProductResponseDTO> showallproduct();
 
-    String addProductToCart(String email,String nameProduct,int quantity);
+    AddProductInCartResponseDTO addProductInCart(String email, String nameProduct, int quantity);
 
     List<ProductResponseDTO> userCheckListProductInCart(EmailRequest user);
 
