@@ -96,7 +96,7 @@ public class UserController {
      @Autowired
     private UserService addPtoductToCart;
      @PostMapping (UrlConstant.ADD_PRODUCT_TO_CART)
-     public AddProductInCartResponseDTO AddProductToCart(@RequestBody String email, @RequestBody String nameProduct, @RequestParam int quantity) {
+     public AddProductInCartResponseDTO AddProductToCart(@RequestBody String email, @RequestBody String nameProduct, @RequestBody int quantity) {
              return addPtoductToCart.addProductInCart(email,nameProduct,quantity);
      }
 
@@ -110,7 +110,7 @@ public class UserController {
      @Autowired
      private UserService userDeleteProduct;
      @DeleteMapping(UrlConstant.USER_DELETE_PRODUCT_BY_NAME)
-    public ResponseEntity<String> DeleteProductById(@RequestBody String email, String nameProduct) {
+    public ResponseEntity<String> DeleteProductById(@RequestBody String email,@RequestBody String nameProduct) {
          return ResponseEntity.ok(userDeleteProduct.userDeleteProductInCart(email,nameProduct));
      }
 
