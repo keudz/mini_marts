@@ -43,14 +43,14 @@ public class UserController {
 
     @Autowired
     private UserService getUser;
-    @GetMapping(UrlConstant.API_V1_GET_USER)
-    public UserCreateResponseDTO GetUser( @RequestParam int id) {
+    @PostMapping(UrlConstant.API_V1_GET_USER)
+    public UserCreateResponseDTO GetUser( @RequestBody int id) {
        return getUser.getUserById(id);
     }
 
     @Autowired
     private UserService showProduct;
-    @GetMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT)
+    @PostMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT)
     public List<ProductResponseDTO> GetAllProduct() {
         return showProduct.showallproduct();
     }
@@ -75,20 +75,20 @@ public class UserController {
     @Autowired
     private AdminService updateProduct;
     @PatchMapping(UrlConstant.API_V1_UPDATE_PRODUCT)
-    public Object AddProduct(@RequestParam int id, @RequestParam String Attribute,@RequestParam String Information) {
+    public Object AddProduct(@RequestBody int id, @RequestBody String Attribute,@RequestBody String Information) {
            return updateProduct.updateProduct(id, Attribute, Information);
     }
 
     @Autowired
     private AdminService deleteProduct;
     @DeleteMapping(UrlConstant.API_V1_DELETE_PRODUCT)
-    public Object DeleteProduct(@RequestParam int id) {
+    public Object DeleteProduct(@RequestBody int id) {
         return deleteProduct.deleteProduct(id);
     }
 
      @Autowired
      private AdminService showProductAdmin;
-     @GetMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT1)
+     @PostMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT1)
      public List<ProductResponseDTO> showAllProduct() {
          return showProductAdmin.showAllProduct();
      }
@@ -96,7 +96,7 @@ public class UserController {
      @Autowired
     private UserService addPtoductToCart;
      @PostMapping (UrlConstant.ADD_PRODUCT_TO_CART)
-     public AddProductInCartResponseDTO AddProductToCart(@RequestParam String email, @RequestParam String nameProduct, @RequestParam int quantity) {
+     public AddProductInCartResponseDTO AddProductToCart(@RequestBody String email, @RequestBody String nameProduct, @RequestParam int quantity) {
              return addPtoductToCart.addProductInCart(email,nameProduct,quantity);
      }
 
