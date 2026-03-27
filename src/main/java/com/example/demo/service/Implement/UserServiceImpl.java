@@ -1,9 +1,6 @@
 package com.example.demo.service.Implement;
 
-import com.example.demo.dto.request.EmailRequest;
-import com.example.demo.dto.request.OrderRequestDTO;
-import com.example.demo.dto.request.UserCreateRequestDTO;
-import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.AddProductInCartResponseDTO;
 import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
@@ -100,12 +97,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AddProductInCartResponseDTO addProductInCart (String email, String nameProduct, int quantity) {
-        User user = userRepository.selectUserByEmail(email);
+    public AddProductInCartResponseDTO addProductInCart (AddProductToCartRequestDTO addProductToCartRequestDTO) {
+        User user = userRepository.selectUserByEmail(addProductToCartRequestDTO.getEmail());
         if(user == null){
             throw new  ApiException(404,"user not found");
         }
-        Product product = productRepository.findByName(nameProduct);
+        Product product = productRepository.findByName(addProductToCartRequestDTO.getNameProduct());
         if (product == null) {
             throw new ApiException(404,"product not found");
         }
@@ -113,21 +110,21 @@ public class UserServiceImpl implements UserService {
         Cart cart = user.getCart();
         Cart_Iterm cart_Iterm = new Cart_Iterm();
         if(cart.getCartItermList().contains(cart_ItermTemp)){
-            cart_ItermTemp.setQUANTITY(cart_ItermTemp.getQUANTITY() + quantity);
+            cart_ItermTemp.setQUANTITY(cart_ItermTemp.getQUANTITY() + addProductToCartRequestDTO.getQuantity());
         }
         else{
             cart_Iterm.setCart(cart);
             cart_Iterm.setProduct(product);
-            cart_Iterm.setQUANTITY(quantity);
+            cart_Iterm.setQUANTITY(addProductToCartRequestDTO.getQuantity());
             cart.getCartItermList().add(cart_Iterm);
         }
-        product.setStock(product.getStock() - quantity);
+        product.setStock(product.getStock() - addProductToCartRequestDTO.getQuantity());
         productRepository.save(product);
         cartRepository.save(cart);
 
         AddProductInCartResponseDTO addProductInCartResponseDTO = new AddProductInCartResponseDTO();
-        addProductInCartResponseDTO.setNameProduct(nameProduct);
-        addProductInCartResponseDTO.setQuantity(quantity);
+        addProductInCartResponseDTO.setNameProduct(addProductToCartRequestDTO.getNameProduct());
+        addProductInCartResponseDTO.setQuantity(addProductInCartResponseDTO.getQuantity());
 
         return addProductInCartResponseDTO;
     }
