@@ -596,24 +596,24 @@ INSERT INTO oders_items (id, ID_PRODUCT, ID_ORDER, original_price, price) VALUES
 
 
 
-#alter table oders_items  add column id INT;
-
-SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
-
-DROP TABLE product ;
-TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
-TRUNCATE TABLE orders;
-TRUNCATE TABLE oders_items;
-TRUNCATE TABLE orders;
-
-DROP TABLE carts;
-DROP TABLE product;
-DROP TABLE orders;
-
-# SELECT
-#     ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Used_MB
-# FROM information_schema.tables
-# WHERE table_schema = 'shoppingonline';
+-- #alter table oders_items  add column id INT;
+--
+-- SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
+--
+-- DROP TABLE product ;
+-- TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
+-- TRUNCATE TABLE orders;
+-- TRUNCATE TABLE oders_items;
+-- TRUNCATE TABLE orders;
+--
+-- DROP TABLE carts;
+-- DROP TABLE product;
+-- DROP TABLE orders;
+--
+-- # SELECT
+-- #     ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Used_MB
+-- # FROM information_schema.tables
+-- # WHERE table_schema = 'shoppingonline';
 
 
 

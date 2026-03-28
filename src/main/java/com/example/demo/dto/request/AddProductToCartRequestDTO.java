@@ -7,7 +7,7 @@ import lombok.Setter;
 public class AddProductToCartRequestDTO {
     private String email;
 
-    private String nameProduct ;
+    private String nameProduct;
 
     private int quantity;
 

@@ -97,36 +97,47 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AddProductInCartResponseDTO addProductInCart (AddProductToCartRequestDTO addProductToCartRequestDTO) {
+    public AddProductInCartResponseDTO addProductInCart(AddProductToCartRequestDTO addProductToCartRequestDTO) {
         User user = userRepository.selectUserByEmail(addProductToCartRequestDTO.getEmail());
-        if(user == null){
-            throw new  ApiException(404,"user not found");
-        }
+        if (user == null) throw new ApiException(404, "User not found");
+
         Product product = productRepository.findByName(addProductToCartRequestDTO.getNameProduct());
-        if (product == null) {
-            throw new ApiException(404,"product not found");
+        if (product == null) throw new ApiException(404, "Product not found");
+
+        // KIỂM TRA TỒN KHO TRƯỚC KHI THÊM
+        if (product.getStock() < addProductToCartRequestDTO.getQuantity()) {
+            throw new ApiException(400, "Số lượng trong kho không đủ");
         }
-        Cart_Iterm cart_ItermTemp = cartItemRepository.seletByIdProduct(product.getID_PRODUCT());
+
         Cart cart = user.getCart();
-        Cart_Iterm cart_Iterm = new Cart_Iterm();
-        if(cart.getCartItermList().contains(cart_ItermTemp)){
-            cart_ItermTemp.setQUANTITY(cart_ItermTemp.getQUANTITY() + addProductToCartRequestDTO.getQuantity());
+        Cart_Iterm existingItem = null;
+        for (Cart_Iterm item : cart.getCartItermList()) {
+            if (item.getProduct().getID_PRODUCT() == product.getID_PRODUCT()) {
+                existingItem = item;
+                break;
+            }
         }
-        else{
-            cart_Iterm.setCart(cart);
-            cart_Iterm.setProduct(product);
-            cart_Iterm.setQUANTITY(addProductToCartRequestDTO.getQuantity());
-            cart.getCartItermList().add(cart_Iterm);
+
+        if (existingItem != null) {
+            existingItem.setQUANTITY(existingItem.getQUANTITY() + addProductToCartRequestDTO.getQuantity());
+        } else {
+            Cart_Iterm newItem = new Cart_Iterm();
+            newItem.setCart(cart);
+            newItem.setProduct(product);
+            newItem.setQUANTITY(addProductToCartRequestDTO.getQuantity());
+            cart.getCartItermList().add(newItem);
         }
-        product.setStock(product.getStock() - addProductToCartRequestDTO.getQuantity());
-        productRepository.save(product);
+
+        // --- BỎ ĐOẠN PRODUCT.SETSTOCK(...) Ở ĐÂY ---
+        // Chỉ trừ kho khi thực hiện thanh toán (Checkout)
+
         cartRepository.save(cart);
 
-        AddProductInCartResponseDTO addProductInCartResponseDTO = new AddProductInCartResponseDTO();
-        addProductInCartResponseDTO.setNameProduct(addProductToCartRequestDTO.getNameProduct());
-        addProductInCartResponseDTO.setQuantity(addProductInCartResponseDTO.getQuantity());
+        AddProductInCartResponseDTO res = new AddProductInCartResponseDTO();
+        res.setNameProduct(product.getName());
+        res.setQuantity(addProductToCartRequestDTO.getQuantity());
 
-        return addProductInCartResponseDTO;
+        return res;
     }
 
     @Override
