@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.constant.UrlConstant;
+import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.entity.Product;
 import com.example.demo.service.AdminService;
@@ -34,21 +36,21 @@ public class AdminController {
     @Autowired
     private AdminService addProduct;
     @PostMapping(UrlConstant.API_V1_ADD_PRODUCT)
-    public Object AddProduct(@RequestBody Product product) {
+    public Object addProduct(@RequestBody ProductRequestDTO product) {
         return addProduct.addProduct(product);
     }
 
     @Autowired
     private AdminService updateProduct;
     @PatchMapping(UrlConstant.API_V1_UPDATE_PRODUCT)
-    public Object AddProduct(@RequestBody int id, @RequestBody String Attribute,@RequestBody String Information) {
-        return updateProduct.updateProduct(id, Attribute, Information);
+    public Object updateProduct(@RequestBody UpdateProductRequestDTO update) {
+        return updateProduct.updateProduct(update);
     }
 
     @Autowired
     private AdminService deleteProduct;
     @DeleteMapping(UrlConstant.API_V1_DELETE_PRODUCT)
-    public Object DeleteProduct(@RequestBody int id) {
+    public Object deleteProduct(@RequestBody int id) {
         return deleteProduct.deleteProduct(id);
     }
 

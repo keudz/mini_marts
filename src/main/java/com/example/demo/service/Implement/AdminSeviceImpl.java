@@ -1,5 +1,7 @@
 package com.example.demo.service.Implement;
 
+import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
@@ -42,43 +44,59 @@ public class AdminSeviceImpl implements AdminService {
 
 
   @Override
-    public Product addProduct(Product product) {
+    public Product addProduct(ProductRequestDTO  product) {
       Product newProduct = new Product();
       newProduct.setName(product.getName());
       newProduct.setPrice(product.getPrice());
       newProduct.setCategory(product.getCategory());
-      newProduct.setOriginal_price(product.getOriginal_price());
+      newProduct.setOriginal_price(product.getOriginalPrice());
       newProduct.setStock(product.getStock());
+      newProduct.setDescription(product.getDescription());
+      newProduct.setImagelink(product.getImagelink());
+      newProduct.setSubCategory(product.getSubCategory());
       productRepository.save(newProduct);
       return newProduct;
       }
 
 
-  @Override
-  public Product updateProduct (int id,String Attribute , String information) {
+    @Override
+    public Product updateProduct(UpdateProductRequestDTO update) {
+        // 1. Tìm sản phẩm trong DB bằng ID từ DTO
+        Optional<Product> productOptional = productRepository.findById(update.getId());
 
-   Optional<Product> Product = productRepository.findById(id);
-   if(Product.isPresent()){
-       Product newProduct = Product.get();// để lấy các phương thức ở trong newProduct thì cần phai khai báo thêm dòng này
-    if(Attribute.equals("name")){
-       newProduct.setName(information);
-    }
-    if(Attribute.equals("price")){
-        newProduct.setPrice(Double.parseDouble(information));//Double.parseDouble:là hàm chuyền từ String sang Double
-    }
-    if(Attribute.equals("category")){
-        newProduct.setCategory(information);
-    }
-    if(Attribute.equals("original_price")){
-        newProduct.setOriginal_price(Double.parseDouble(information));
-          }
-    if(Attribute.equals("stock")){
-        newProduct.setStock(Integer.parseInt(information));
-    }
-    productRepository.save(newProduct);
-    return newProduct;
-       }
-     throw new ApiException(404,"product not found");
+        if (productOptional.isPresent()) {
+            Product existingProduct = productOptional.get();
+
+            // Lấy các giá trị từ DTO
+            String attribute = update.getAttribute().toLowerCase();
+            String information = update.getInformation();
+
+            // 2. Kiểm tra Attribute nào cần update bằng if-else
+            if (attribute.equals("name")) {
+                existingProduct.setName(information);
+            }
+            else if (attribute.equals("price")) {
+                existingProduct.setPrice(Double.parseDouble(information));
+            }
+            else if (attribute.equals("category")) {
+                existingProduct.setCategory(information);
+            }
+            else if (attribute.equals("original_price") || attribute.equals("originalprice")) {
+                existingProduct.setOriginal_price(Double.parseDouble(information));
+            }
+            else if (attribute.equals("stock")) {
+                existingProduct.setStock(Integer.parseInt(information));
+            }
+            else if (attribute.equals("description")) {
+                existingProduct.setDescription(information);
+            }
+
+            // 3. Lưu và trả về kết quả
+            return productRepository.save(existingProduct);
+        }
+
+        // 4. Báo lỗi nếu không tìm thấy ID
+        throw new ApiException(404, "Không tìm thấy sản phẩm có ID: " + update.getId());
     }
 
 

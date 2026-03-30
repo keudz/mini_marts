@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
@@ -14,9 +16,9 @@ public interface AdminService {
 
   void unlockUser(int id);
 
-  Product addProduct(Product product  );
+  Product addProduct(ProductRequestDTO productRequestDTO);
 
-  Product updateProduct(int id,String Attribute,String information);
+  Product updateProduct(UpdateProductRequestDTO updateProductRequestDTO);
 
     Product deleteProduct(int id);
 
