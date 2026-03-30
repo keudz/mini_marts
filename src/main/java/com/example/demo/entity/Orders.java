@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
-
+@Data
 @Entity
 @Table(name = "orders")
 public class Orders {
@@ -19,7 +20,7 @@ public class Orders {
     private double TATAL_AMOUNT;
 
     private int USER_ID;
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order_Iterm> orderItermList;
 
     @ManyToOne
@@ -37,59 +38,4 @@ public class Orders {
         this.TATAL_AMOUNT = TATAL_AMOUNT;
     }
 
-    public int getID_ORDER() {
-        return ID_ORDER;
-    }
-
-    public void setID_ORDER(int ID_ORDER) {
-        this.ID_ORDER = ID_ORDER;
-    }
-
-    public String getDESCRIPTION() {
-        return DESCRIPTION;
-    }
-
-    public void setDESCRIPTION(String DESCRIPTION) {
-        this.DESCRIPTION = DESCRIPTION;
-    }
-
-    public String getSTATUS() {
-        return STATUS;
-    }
-
-    public void setSTATUS(String STATUS) {
-        this.STATUS = STATUS;
-    }
-
-    public double getTATAL_AMOUNT() {
-        return TATAL_AMOUNT;
-    }
-
-    public void setTATAL_AMOUNT(double TATAL_AMOUNT) {
-        this.TATAL_AMOUNT = TATAL_AMOUNT;
-    }
-
-    public int getUSER_ID() {
-        return USER_ID;
-    }
-
-    public void setUSER_ID(int USER_ID) {
-        this.USER_ID = USER_ID;
-    }
-
-    public List<Order_Iterm> getOrderItermList() {
-        return orderItermList;
-    }
-
-    public void setOrderItermList(List<Order_Iterm> orderItermList) {
-        this.orderItermList = orderItermList;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

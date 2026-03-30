@@ -20,11 +20,16 @@ public interface UserService {
 
     List<ProductResponseDTO> userCheckListProductInCart(EmailRequest user);
 
-    String userDeleteProductInCart(String email ,String nameProduct);
+    String userDeleteProductInCart(DeleteItemFromCartRequestDTO delete);
 
     Object useOrderAllItemInCartToOrder(EmailRequest email);
 
     Object useOrderSomeItemFromCartToOrder(OrderRequestDTO  orderRequestDTO);
+
+     void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO);
+
+
+
 
 
 

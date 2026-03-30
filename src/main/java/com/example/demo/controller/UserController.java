@@ -107,8 +107,8 @@ public class UserController {
      @Autowired
      private UserService userDeleteProduct;
      @DeleteMapping(UrlConstant.USER_DELETE_PRODUCT_BY_NAME)
-    public ResponseEntity<String> DeleteProductById(@RequestBody String email,@RequestBody String nameProduct) {
-         return ResponseEntity.ok(userDeleteProduct.userDeleteProductInCart(email,nameProduct));
+    public String DeleteProductById(@RequestBody DeleteItemFromCartRequestDTO deleteProduct) {
+         return userDeleteProduct.userDeleteProductInCart(deleteProduct);
      }
 
      @Autowired
@@ -124,4 +124,12 @@ public class UserController {
     public  Object useOrderAllItemInCart(@RequestBody OrderRequestDTO orderRequestDTO){
         return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(orderRequestDTO);
     }
+
+    @Autowired
+    private UserService addInforUser;
+    @PostMapping(UrlConstant.ADD_INFOR_USER)
+    public  void addInforUser(@RequestBody AddInforUserRequestDTO addInforUserRequestDTO){
+         addInforUser.addInforUser(addInforUserRequestDTO);
+    }
+
 }

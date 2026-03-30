@@ -3,73 +3,47 @@
 
 USE mini_mart_dev;
 
+Drop table users;
+
 CREATE TABLE users (
                        ID_USER INT AUTO_INCREMENT PRIMARY KEY,
                        email VARCHAR(255) UNIQUE NOT NULL,
                        password VARCHAR(255) NOT NULL,
                        fullname VARCHAR(255) NOT NULL,
                        status VARCHAR(50) NOT NULL,
-                       role VARCHAR(50) NOT NULL
+                       role VARCHAR(50) NOT NULL,
+                       realName VARCHAR(50),
+                       numberPhone BIGINT,
+                       birthDay DATE,
+                       address VARCHAR(100),
+                       sex VARCHAR(10),
+                       image TEXT
 );
-INSERT INTO users (ID_USER, email, password, fullname, status, role) VALUES
-                                                                         (1, 'admin1@gmail.com', '123456', 'Nguyễn Quản Trị', 'active', 'admin'),
-                                                                         (2, 'manager@gmail.com', '123456', 'Trần Quản Lý', 'active', 'admin'),
-                                                                         (3, 'user3@gmail.com', '123456', 'Lê Văn Ba', 'active', 'user'),
-                                                                         (4, 'user4@gmail.com', '123456', 'Phạm Thị Bốn', 'inactive', 'user'),
-                                                                         (5, 'user5@gmail.com', '123456', 'Hoàng Văn Năm', 'active', 'user'),
-                                                                         (6, 'user6@gmail.com', '123456', 'Đặng Thị Sáu', 'active', 'user'),
-                                                                         (7, 'user7@gmail.com', '123456', 'Bùi Văn Bảy', 'active', 'user'),
-                                                                         (8, 'user8@gmail.com', '123456', 'Vũ Thị Tám', 'banned', 'user'),
-                                                                         (9, 'user9@gmail.com', '123456', 'Phan Văn Chín', 'active', 'user'),
-                                                                         (10, 'user10@gmail.com', '123456', 'Đỗ Thị Mười', 'active', 'user'),
-                                                                         (11, 'user11@gmail.com', '123456', 'Ngô Văn Mười Một', 'active', 'user'),
-                                                                         (12, 'user12@gmail.com', '123456', 'Dương Thị Mười Hai', 'active', 'user'),
-                                                                         (13, 'user13@gmail.com', '123456', 'Lý Văn Mười Ba', 'active', 'user'),
-                                                                         (14, 'user14@gmail.com', '123456', 'Trần Văn Tùng', 'active', 'user'),
-                                                                         (15, 'user15@gmail.com', '123456', 'Lê Thị Thu', 'active', 'user'),
-                                                                         (16, 'user16@gmail.com', '123456', 'Nguyễn Hoàng Oanh', 'active', 'user'),
-                                                                         (17, 'user17@gmail.com', '123456', 'Phạm Tấn Tài', 'active', 'user'),
-                                                                         (18, 'user18@gmail.com', '123456', 'Võ Trọng Nghĩa', 'inactive', 'user'),
-                                                                         (19, 'user19@gmail.com', '123456', 'Đinh Thị Mỹ Linh', 'active', 'user'),
-                                                                         (20, 'user20@gmail.com', '123456', 'Trịnh Quốc Cường', 'active', 'user'),
-                                                                         (21, 'user21@gmail.com', '123456', 'Bùi Thanh Trúc', 'active', 'user'),
-                                                                         (22, 'user22@gmail.com', '123456', 'Lương Tuấn Kiệt', 'active', 'user'),
-                                                                         (23, 'user23@gmail.com', '123456', 'Vương Kim Liên', 'active', 'user'),
-                                                                         (24, 'user24@gmail.com', '123456', 'Lâm Chấn Khang', 'active', 'user'),
-                                                                         (25, 'user25@gmail.com', '123456', 'Mai Phương Thúy', 'banned', 'user'),
-                                                                         (26, 'user26@gmail.com', '123456', 'Đào Duy Từ', 'active', 'user'),
-                                                                         (27, 'user27@gmail.com', '123456', 'Châu Tinh Trì', 'active', 'user'),
-                                                                         (28, 'user28@gmail.com', '123456', 'Hồ Tấn Tài', 'active', 'user'),
-                                                                         (29, 'user29@gmail.com', '123456', 'Quách Ngọc Ngoan', 'active', 'user'),
-                                                                         (30, 'user30@gmail.com', '123456', 'Trương Bá Chi', 'active', 'user'),
-                                                                         (31, 'user31@gmail.com', '123456', 'Nguyễn Quang Hải', 'active', 'user'),
-                                                                         (32, 'user32@gmail.com', '123456', 'Đoàn Văn Hậu', 'active', 'user'),
-                                                                         (33, 'user33@gmail.com', '123456', 'Bùi Tiến Dũng', 'inactive', 'user'),
-                                                                         (34, 'user34@gmail.com', '123456', 'Quế Ngọc Hải', 'active', 'user'),
-                                                                         (35, 'user35@gmail.com', '123456', 'Vũ Văn Thanh', 'active', 'user'),
-                                                                         (36, 'user36@gmail.com', '123456', 'Phan Văn Đức', 'active', 'user'),
-                                                                         (37, 'user37@gmail.com', '123456', 'Hà Đức Chinh', 'active', 'user'),
-                                                                         (38, 'user38@gmail.com', '123456', 'Nguyễn Tiến Linh', 'active', 'user'),
-                                                                         (39, 'user39@gmail.com', '123456', 'Phạm Tuấn Hải', 'active', 'user'),
-                                                                         (40, 'user40@gmail.com', '123456', 'Đỗ Hùng Dũng', 'active', 'user'),
-                                                                         (41, 'user41@gmail.com', '123456', 'Nguyễn Hoàng Đức', 'banned', 'user'),
-                                                                         (42, 'user42@gmail.com', '123456', 'Nguyễn Văn Toàn', 'active', 'user'),
-                                                                         (43, 'user43@gmail.com', '123456', 'Lương Xuân Trường', 'active', 'user'),
-                                                                         (44, 'user44@gmail.com', '123456', 'Nguyễn Tuấn Anh', 'active', 'user'),
-                                                                         (45, 'user45@gmail.com', '123456', 'Trần Đình Trọng', 'active', 'user'),
-                                                                         (46, 'user46@gmail.com', '123456', 'Đặng Văn Lâm', 'active', 'user'),
-                                                                         (47, 'user47@gmail.com', '123456', 'Nguyễn Filip', 'inactive', 'user'),
-                                                                         (48, 'user48@gmail.com', '123456', 'Bùi Hoàng Việt Anh', 'active', 'user'),
-                                                                         (49, 'user49@gmail.com', '123456', 'Phan Tuấn Tài', 'active', 'user'),
-                                                                         (50, 'user50@gmail.com', '123456', 'Nguyễn Thanh Bình', 'active', 'user');
 
-
-
-
-
-
-
-
+INSERT INTO users (ID_USER, email, password, fullname, status, role, realName, numberPhone, birthDay, address, sex, image) VALUES
+                                                                                                                               (1, 'admin1@gmail.com', '123456', 'Nguyễn Quản Trị', 'active', 'admin', 'Nguyễn Văn Quản Trị', 0901234567, '1990-01-01', '123 Đường Lê Lợi, Quận 1, TP.HCM', 'Male', NULL),
+                                                                                                                               (2, 'manager@gmail.com', '123456', 'Trần Quản Lý', 'active', 'admin', 'Trần Minh Quản Lý', 0902345678, '1992-05-15', '456 Đường Trần Hưng Đạo, Quận 5, TP.HCM', 'Male', NULL),
+                                                                                                                               (3, 'user3@gmail.com', '123456', 'Lê Văn Ba', 'active', 'user', 'Lê Văn Ba', 0903456789, '1995-03-20', '789 Đường CMT8, Quận 10, TP.HCM', 'Male', NULL),
+                                                                                                                               (4, 'user4@gmail.com', '123456', 'Phạm Thị Bốn', 'inactive', 'user', 'Phạm Thị Bốn', 0904567890, '1998-11-02', '12 Đường Láng, Quận Đống Đa, Hà Nội', 'Female', NULL),
+                                                                                                                               (5, 'user5@gmail.com', '123456', 'Hoàng Văn Năm', 'active', 'user', 'Hoàng Văn Năm', 0905678901, '1993-07-12', '34 Đường Cầu Giấy, Quận Cầu Giấy, Hà Nội', 'Male', NULL),
+                                                                                                                               (6, 'user6@gmail.com', '123456', 'Đặng Thị Sáu', 'active', 'user', 'Đặng Thị Sáu', 0906789012, '1996-09-25', '56 Đường Kim Mã, Quận Ba Đình, Hà Nội', 'Female', NULL),
+                                                                                                                               (7, 'user7@gmail.com', '123456', 'Bùi Văn Bảy', 'active', 'user', 'Bùi Văn Bảy', 0907890123, '1994-12-30', '89 Đường Nguyễn Trãi, Quận Thanh Xuân, Hà Nội', 'Male', NULL),
+                                                                                                                               (8, 'user8@gmail.com', '123456', 'Vũ Thị Tám', 'banned', 'user', 'Vũ Thị Tám', 0908901234, '1991-02-14', '101 Đường Trần Phú, Quận Hà Đông, Hà Nội', 'Female', NULL),
+                                                                                                                               (9, 'user9@gmail.com', '123456', 'Phan Văn Chín', 'active', 'user', 'Phan Văn Chín', 0909012345, '1997-06-05', '202 Đường Hùng Vương, Đà Nẵng', 'Male', NULL),
+                                                                                                                               (10, 'user10@gmail.com', '123456', 'Đỗ Thị Mười', 'active', 'user', 'Đỗ Thị Mười', 0910123456, '1999-08-21', '303 Đường Điện Biên Phủ, Đà Nẵng', 'Female', NULL),
+                                                                                                                               (11, 'user11@gmail.com', '123456', 'Ngô Văn Mười Một', 'active', 'user', 'Ngô Văn Mười Một', 0911234567, '1990-10-10', '11 Đường Lý Thường Kiệt, Hải Phòng', 'Male', NULL),
+                                                                                                                               (12, 'user12@gmail.com', '123456', 'Dương Thị Mười Hai', 'active', 'user', 'Dương Thị Mười Hai', 0912345678, '1992-11-11', '12 Đường Lạch Tray, Hải Phòng', 'Female', NULL),
+                                                                                                                               (13, 'user13@gmail.com', '123456', 'Lý Văn Mười Ba', 'active', 'user', 'Lý Văn Mười Ba', 0913456789, '1993-03-13', '13 Đường Võ Văn Kiệt, Cần Thơ', 'Male', NULL),
+                                                                                                                               (14, 'user14@gmail.com', '123456', 'Trần Văn Tùng', 'active', 'user', 'Trần Văn Tùng', 0914567890, '1994-04-14', '14 Đường Nguyễn Văn Linh, Cần Thơ', 'Male', NULL),
+                                                                                                                               (15, 'user15@gmail.com', '123456', 'Lê Thị Thu', 'active', 'user', 'Lê Thị Thu', 0915678901, '1995-05-15', '15 Đường Hai Bà Trưng, Huế', 'Female', NULL),
+                                                                                                                               (16, 'user16@gmail.com', '123456', 'Nguyễn Hoàng Oanh', 'active', 'user', 'Nguyễn Hoàng Oanh', 0916789012, '1996-06-16', '16 Đường Phan Bội Châu, Huế', 'Female', NULL),
+                                                                                                                               (17, 'user17@gmail.com', '123456', 'Phạm Tấn Tài', 'active', 'user', 'Phạm Tấn Tài', 0917890123, '1997-07-17', '17 Đường Đồng Khởi, Biên Hòa', 'Male', NULL),
+                                                                                                                               (18, 'user18@gmail.com', '123456', 'Võ Trọng Nghĩa', 'inactive', 'user', 'Võ Trọng Nghĩa', 0918901234, '1998-08-18', '18 Đường Phạm Văn Thuận, Biên Hòa', 'Male', NULL),
+                                                                                                                               (19, 'user19@gmail.com', '123456', 'Đinh Thị Mỹ Linh', 'active', 'user', 'Đinh Thị Mỹ Linh', 0919012345, '1999-09-19', '19 Đường 30/4, Vũng Tàu', 'Female', NULL),
+                                                                                                                               (20, 'user20@gmail.com', '123456', 'Trịnh Quốc Cường', 'active', 'user', 'Trịnh Quốc Cường', 0920123456, '1990-12-20', '20 Đường Hạ Long, Vũng Tàu', 'Male', NULL),
+                                                                                                                               (21, 'user21@gmail.com', '123456', 'Bùi Thanh Trúc', 'active', 'user', 'Bùi Thanh Trúc', 0921234567, '1991-01-21', '21 Đường Nguyễn Huệ, Quy Nhơn', 'Female', NULL),
+                                                                                                                               (22, 'user22@gmail.com', '123456', 'Lương Tuấn Kiệt', 'active', 'user', 'Lương Tuấn Kiệt', 0922345678, '1992-02-22', '22 Đường Xuân Diệu, Quy Nhơn', 'Male', NULL),
+                                                                                                                               (23, 'user23@gmail.com', '123456', 'Vương Kim Liên', 'active', 'user', 'Vương Kim Liên', 0923456789, '1993-03-23', '23 Đường Quang Trung, Nha Trang', 'Female', NULL);
 
 
 
@@ -598,14 +572,14 @@ INSERT INTO oders_items (id, ID_PRODUCT, ID_ORDER, original_price, price) VALUES
 
 -- #alter table oders_items  add column id INT;
 --
--- SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
+SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
 --
 -- DROP TABLE product ;
 -- TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
 -- TRUNCATE TABLE orders;
 -- TRUNCATE TABLE oders_items;
 -- TRUNCATE TABLE orders;
---
+DROP TABLE users;
 -- DROP TABLE carts;
 -- DROP TABLE product;
 -- DROP TABLE orders;

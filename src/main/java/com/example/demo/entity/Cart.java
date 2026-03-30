@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
-
+@Data
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -27,34 +28,4 @@ public class Cart {
     public Cart() {
     }
 
-
-
-    public Cart(int ID_CART) {
-        this.ID_CART = ID_CART;
-    }
-
-    public int getID_CART() {
-        return ID_CART;
-    }
-
-    public void setID_CART(int ID_CART) {
-        this.ID_CART = ID_CART;
-    }
-
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Cart_Iterm> getCartItermList() {
-        return cartItermList;
-    }
-
-    public void setCartItermList(List<Cart_Iterm> cartItermList) {
-        this.cartItermList = cartItermList;
-    }
 }

@@ -64,4 +64,17 @@ public class Cart_Iterm {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Cart_Iterm that = (Cart_Iterm) o;
+        if(that.getProduct().getName() == this.getProduct().getName()){
+            return true;
+        }
+        return false;
+    }
+
 }

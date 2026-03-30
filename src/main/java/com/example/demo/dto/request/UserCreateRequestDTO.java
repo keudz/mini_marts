@@ -1,53 +1,32 @@
 package com.example.demo.dto.request;
 
 import jakarta.validation.constraints.Email;
+import lombok.Data;
+
+
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
+@Data
 public class UserCreateRequestDTO {
+
     @NotBlank(message = "Email is notblank")//@NotBlank đảm bảo chỗi không chỉ chưa khoảng trắng;
     @Size(min = 6, max = 50,message = "Email is valid")
     @Email(message = "Email is valid")
     private String email;
-    @NotBlank(message = "Password is notblank")
+    @NotBlank(message = "PasswSSSord is notblank")
     @Size(min = 6, max = 50,message = "password invalid")
     private String password;
     @NotBlank(message = "Username is notblank")
     @Size(min = 6, max = 50,message = "Username is invalid")
-    private String fullname;
+    private String fullName;
 
 
-    public UserCreateRequestDTO(String email, String password, String fullname) {
+    public UserCreateRequestDTO(String email, String password, String fullName) {
         this.email = email;
         this.password = password;
-        this.fullname = fullname;
+        this.fullName = fullName;
 
 }
-    public UserCreateRequestDTO() {}
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
 
 }

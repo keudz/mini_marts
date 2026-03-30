@@ -1,10 +1,7 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.*;
-import com.example.demo.dto.response.AddProductInCartResponseDTO;
-import com.example.demo.dto.response.OrderResponceDTO;
-import com.example.demo.dto.response.ProductResponseDTO;
-import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ApiException;
 import com.example.demo.repository.*;
@@ -38,19 +35,17 @@ public class UserServiceImpl implements UserService {
     public UserCreateResponseDTO registerUser(UserCreateRequestDTO user) {
         userValidateServiceImpl.ValidateCheckCreate(user);
         User userCreate = new User();
-        userCreate.setFullname(user.getFullname());
+        userCreate.setFullname(user.getFullName());
         userCreate.setPassword(user.getPassword());
         userCreate.setEmail(user.getEmail());
         userCreate.setRole("Costumer");
         userCreate.setStatus("Active");
         userRepository.save(userCreate);
         Cart cart = new Cart();
-        cart.setUser(userCreate);
         userCreate.setCart(cart);
-        userRepository.save(userCreate);
         UserCreateResponseDTO userRes = new UserCreateResponseDTO();
         userRes.setEmail(user.getEmail());
-        userRes.setName(user.getFullname());
+        userRes.setName(user.getFullName());
         return userRes;
     }
 
@@ -128,8 +123,6 @@ public class UserServiceImpl implements UserService {
             cart.getCartItermList().add(newItem);
         }
 
-        // --- BỎ ĐOẠN PRODUCT.SETSTOCK(...) Ở ĐÂY ---
-        // Chỉ trừ kho khi thực hiện thanh toán (Checkout)
 
         cartRepository.save(cart);
 
@@ -166,14 +159,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String userDeleteProductInCart(String email , String nameProduct){
-        User userRes = userRepository.selectUserByEmail(email);
+    public String userDeleteProductInCart(DeleteItemFromCartRequestDTO delete){
+        User userRes = userRepository.selectUserByEmail(delete.getEmail());
+        if(userRes == null)
+            throw new ApiException(404,"user not found");
         Cart cart = userRes.getCart();
         if (cart == null || cart.getCartItermList().isEmpty()){
-           throw new ApiException(200,"cart is empty");
+           throw new ApiException(404,"cart is empty");
         }
-        userRepository.deleteProductByName(nameProduct, cart.getID_CART());
-        return "da xoa thanh cong san pham " + nameProduct + "ra khoi gio hang!!";
+        userRepository.deleteProductByName(delete.getNameProduct(), cart.getID_CART());
+        return "da xoa thanh cong san pham " + delete.getNameProduct() + "ra khoi gio hang!!";
     }
 
     @Override
@@ -341,6 +336,20 @@ public class UserServiceImpl implements UserService {
         return order;
     }
 
+    @Override
+    public void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO){
+    User useRes = userRepository.selectUserByEmail(addInforUserRequestDTO.getEmail());
+    if(useRes == null){
+        throw new ApiException(404, "User not found");
+    }
+    useRes.setRealName(addInforUserRequestDTO.getRealName());
+    useRes.setNumberPhone(addInforUserRequestDTO.getNumberPhone());
+    useRes.setAddress(addInforUserRequestDTO.getAddress());
+    useRes.setImage(addInforUserRequestDTO.getImage());
+    useRes.setSex(addInforUserRequestDTO.getSex());
+    useRes.setBirthDay(addInforUserRequestDTO.getBirthday());
+    userRepository.save(useRes);
+  }
 }
 
 
