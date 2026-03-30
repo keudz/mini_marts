@@ -61,34 +61,34 @@ public class UserController {
 //        }
 //            return blockUser.blockUser(name);
 //    }
-
-    @Autowired
-    private AdminService addProduct;
-    @PostMapping(UrlConstant.API_V1_ADD_PRODUCT)
-    public Object AddProduct(@RequestBody Product product) {
-        return addProduct.addProduct(product);
-    }
-
-    @Autowired
-    private AdminService updateProduct;
-    @PatchMapping(UrlConstant.API_V1_UPDATE_PRODUCT)
-    public Object AddProduct(@RequestBody int id, @RequestBody String Attribute,@RequestBody String Information) {
-           return updateProduct.updateProduct(id, Attribute, Information);
-    }
-
-    @Autowired
-    private AdminService deleteProduct;
-    @DeleteMapping(UrlConstant.API_V1_DELETE_PRODUCT)
-    public Object DeleteProduct(@RequestBody int id) {
-        return deleteProduct.deleteProduct(id);
-    }
-
-     @Autowired
-     private AdminService showProductAdmin;
-     @PostMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT1)
-     public List<ProductResponseDTO> showAllProduct() {
-         return showProductAdmin.showAllProduct();
-     }
+//
+//    @Autowired
+//    private AdminService addProduct;
+//    @PostMapping(UrlConstant.API_V1_ADD_PRODUCT)
+//    public Object AddProduct(@RequestBody Product product) {
+//        return addProduct.addProduct(product);
+//    }
+//
+//    @Autowired
+//    private AdminService updateProduct;
+//    @PatchMapping(UrlConstant.API_V1_UPDATE_PRODUCT)
+//    public Object AddProduct(@RequestBody int id, @RequestBody String Attribute,@RequestBody String Information) {
+//           return updateProduct.updateProduct(id, Attribute, Information);
+//    }
+//
+//    @Autowired
+//    private AdminService deleteProduct;
+//    @DeleteMapping(UrlConstant.API_V1_DELETE_PRODUCT)
+//    public Object DeleteProduct(@RequestBody int id) {
+//        return deleteProduct.deleteProduct(id);
+//    }
+//
+//     @Autowired
+//     private AdminService showProductAdmin;
+//     @PostMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT1)
+//     public List<ProductResponseDTO> showAllProduct() {
+//         return showProductAdmin.showAllProduct();
+//     }
 
      @Autowired
     private UserService addPtoductToCart;
