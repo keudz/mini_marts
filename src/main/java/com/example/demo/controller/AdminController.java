@@ -17,15 +17,18 @@ public class AdminController {
 
 
 
-    //    @Autowired
-//    private AdminService blockUser;
-//    @PostMapping(UrlConstant.API_V1_BLOCK_USER)
-//  public Object BlockUser(@Valid @RequestBody String name, BindingResult result) {
-//        if(result.hasErrors()) {
-//            return result.getAllErrors().get(0).getDefaultMessage();
-//        }
-//            return blockUser.blockUser(name);
-//    }
+        @Autowired
+    private AdminService blockUser;
+    @PostMapping(UrlConstant.API_V1_BLOCK_USER)
+  public void BlockUser(@RequestParam int id) {
+        blockUser.blockUser(id);
+    }
+    @Autowired
+    private AdminService unblockUser;
+    @PostMapping(UrlConstant.UNLOCK_USER)
+    public void unLockUser(@RequestParam int id) {
+        unblockUser.unlockUser(id);
+    }
 
     @Autowired
     private AdminService addProduct;

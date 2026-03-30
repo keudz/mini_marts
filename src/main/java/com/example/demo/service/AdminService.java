@@ -10,7 +10,9 @@ import java.util.List;
 public interface AdminService {
   List<User> showAllUser();
 
-//  UserResponDTO blockUser(String id);
+  void blockUser(int id);
+
+  void unlockUser(int id);
 
   Product addProduct(Product product  );
 

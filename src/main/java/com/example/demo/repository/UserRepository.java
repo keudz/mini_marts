@@ -36,8 +36,14 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
        @Transactional
        @Modifying
-       @Query("Update User u set u.status = 'block' Where u.fullname = :name")
-       int blockUserStatus(@Param("name") String name);
+       @Query("Update User u set u.status = 'block' Where u.idUser = :id")
+       int blockUser(@Param("id") int id);
+
+       @Transactional//
+       @Modifying
+       @Query("update User u set u.status = 'active' where u.idUser =:id ")
+       int activeUser(@Param("id") int id);
+
 
        @Query("SELECT user From User user where user.fullname = :name")
        User selectUserByName(@Param("name") String name);

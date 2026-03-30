@@ -17,6 +17,8 @@ public class UrlConstant {
     public static final String USER_ORDER_ALL_ITEM_IN_CART = "/api/v1/orderAllItemInCart";
     public static final String USER_ORDER_SOME_ITEM_IN_CART = "/api/v1/orderSomeItemInCart";
     public static final String ADD_INFOR_USER = "api/v1/addInforUser";
+    public static final String UNLOCK_USER = "api/v1/unlockUser";
+
 
 
 }
