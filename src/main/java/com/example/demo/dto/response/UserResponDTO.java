@@ -15,8 +15,6 @@ public class UserResponDTO {
 
     private String email;
 
-    private String password;
-
     private String fullName;
 
     private String status;

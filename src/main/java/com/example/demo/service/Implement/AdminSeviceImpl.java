@@ -7,6 +7,7 @@ import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AdminService;
@@ -27,25 +28,16 @@ public class AdminSeviceImpl implements AdminService {
     @Autowired
     private ProductRepository  productRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
 
     public List<UserResponDTO>  showAllUser() {
         List<User> userList = userRepository.findAll();
         List<UserResponDTO> userResponDTOList = new ArrayList<>();
         for(User user:userList){
-            UserResponDTO userResponDTO = new UserResponDTO();
-            userResponDTO.setEmail(user.getEmail());
-            userResponDTO.setIdUser(user.getIdUser());
-            userResponDTO.setStatus(user.getStatus());
-            userResponDTO.setAddress(user.getAddress());
-            userResponDTO.setRole(user.getRole());
-            userResponDTO.setBirthDay(user.getBirthDay());
-            userResponDTO.setSex(user.getSex());
-            userResponDTO.setImage(user.getImage());
-            userResponDTO.setNumberPhone(user.getNumberPhone());
-            userResponDTO.setRealName(user.getRealName());
-            userResponDTO.setFullName(user.getFullName());
-            userResponDTOList.add(userResponDTO);
+            userResponDTOList.add(userMapper.userToUserResponDTO(user));
         }
         return userResponDTOList;
     }

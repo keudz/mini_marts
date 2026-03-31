@@ -130,10 +130,7 @@ public class UserServiceImpl implements UserService {
             newItem.setQUANTITY(addProductToCartRequestDTO.getQuantity());
             cart.getCartItermList().add(newItem);
         }
-
-
         cartRepository.save(cart);
-
         AddProductInCartResponseDTO res = new AddProductInCartResponseDTO();
         res.setNameProduct(product.getName());
         res.setQuantity(addProductToCartRequestDTO.getQuantity());
@@ -322,7 +319,7 @@ public class UserServiceImpl implements UserService {
             orderItem.setORIGINAL_PRICE(price);
             orderItem.setPRICE(price * cartItem.getQUANTITY());
 
-            orderItem.setOrder(order); // 🔥 QUAN TRỌNG
+            orderItem.setOrder(order);
 
             totalAmount += orderItem.getPRICE();
 
@@ -338,8 +335,10 @@ public class UserServiceImpl implements UserService {
         // 5. Lưu
         orderRepository.save(order);
 
-        // 6. Xóa những item đã order khỏi cart
+        // 6. Xóa những item đã order khỏi ca
+//       Sau đó mới xóa dưới DB
         cartItemRepository.deleteAll(selectedItems);
+
 
         return order;
     }
@@ -358,6 +357,7 @@ public class UserServiceImpl implements UserService {
     useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
     userRepository.save(useRes);
   }
+
 }
 
 

@@ -574,14 +574,14 @@ INSERT INTO oders_items (id, ID_PRODUCT, ID_ORDER, original_price, price) VALUES
 
 -- #alter table oders_items  add column id INT;
 --
-SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
+# SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
 --
 -- DROP TABLE product ;
 -- TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
 -- TRUNCATE TABLE orders;
 -- TRUNCATE TABLE oders_items;
 -- TRUNCATE TABLE orders;
-DROP TABLE users;
+# DROP TABLE users;
 -- DROP TABLE carts;
 -- DROP TABLE product;
 -- DROP TABLE orders;
@@ -591,8 +591,14 @@ DROP TABLE users;
 -- # FROM information_schema.tables
 -- # WHERE table_schema = 'shoppingonline';
 
+select * from mini_mart_dev.product
+where product.name = N'Bàn phím Bluetooth mini'
 
 
+select * from product
+where product.name = N'Balo thời trang'
+    SSD di động 512GB
 
 
-
+select * from mini_mart_dev.product
+where product.name = N'SSD di động 512GB'
