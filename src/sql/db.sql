@@ -3,24 +3,26 @@
 
 USE mini_mart_dev;
 
+Set foreign_key_checks  = 0;
+
 Drop table users;
 
 CREATE TABLE users (
                        ID_USER INT AUTO_INCREMENT PRIMARY KEY,
                        email VARCHAR(255) UNIQUE NOT NULL,
                        password VARCHAR(255) NOT NULL,
-                       fullname VARCHAR(255) NOT NULL,
+                       full_name VARCHAR(255) NOT NULL,
                        status VARCHAR(50) NOT NULL,
                        role VARCHAR(50) NOT NULL,
-                       realName VARCHAR(50),
-                       numberPhone BIGINT,
-                       birthDay DATE,
+                       real_name VARCHAR(50),
+                       number_phone BIGINT,
+                       birth_day DATE,
                        address VARCHAR(100),
                        sex VARCHAR(10),
                        image TEXT
 );
 
-INSERT INTO users (ID_USER, email, password, fullname, status, role, realName, numberPhone, birthDay, address, sex, image) VALUES
+INSERT INTO users (ID_USER, email, password, full_name, status, role, real_name, number_phone, birth_day, address, sex, image) VALUES
                                                                                                                                (1, 'admin1@gmail.com', '123456', 'Nguyễn Quản Trị', 'active', 'admin', 'Nguyễn Văn Quản Trị', 0901234567, '1990-01-01', '123 Đường Lê Lợi, Quận 1, TP.HCM', 'Male', NULL),
                                                                                                                                (2, 'manager@gmail.com', '123456', 'Trần Quản Lý', 'active', 'admin', 'Trần Minh Quản Lý', 0902345678, '1992-05-15', '456 Đường Trần Hưng Đạo, Quận 5, TP.HCM', 'Male', NULL),
                                                                                                                                (3, 'user3@gmail.com', '123456', 'Lê Văn Ba', 'active', 'user', 'Lê Văn Ba', 0903456789, '1995-03-20', '789 Đường CMT8, Quận 10, TP.HCM', 'Male', NULL),

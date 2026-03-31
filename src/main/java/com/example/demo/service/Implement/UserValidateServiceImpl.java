@@ -3,7 +3,6 @@ package com.example.demo.service.Implement;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
-import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
 import com.example.demo.repository.UserRepository;
@@ -28,7 +27,7 @@ public class UserValidateServiceImpl implements UserValidateSevice {
         }
 
         userCreateResponseDTO.setEmail(userRes.getEmail());
-        userCreateResponseDTO.setName(userRes.getFullname());
+        userCreateResponseDTO.setName(userRes.getFullName());
         return userCreateResponseDTO;
 
 

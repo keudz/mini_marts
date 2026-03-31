@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
@@ -8,13 +10,15 @@ import com.example.demo.entity.User;
 import java.util.List;
 
 public interface AdminService {
-  List<User> showAllUser();
+  List<UserResponDTO> showAllUser();
 
-//  UserResponDTO blockUser(String id);
+  void blockUser(int id);
 
-  Product addProduct(Product product  );
+  void unlockUser(int id);
 
-  Product updateProduct(int id,String Attribute,String information);
+  Product addProduct(ProductRequestDTO productRequestDTO);
+
+  Product updateProduct(UpdateProductRequestDTO updateProductRequestDTO);
 
     Product deleteProduct(int id);
 

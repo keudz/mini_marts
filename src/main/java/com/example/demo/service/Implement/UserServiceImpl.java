@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public UserCreateResponseDTO registerUser(UserCreateRequestDTO user) {
         userValidateServiceImpl.ValidateCheckCreate(user);
         User userCreate = new User();
-        userCreate.setFullname(user.getFullName());
+        userCreate.setFullName(user.getFullName());
         userCreate.setPassword(user.getPassword());
         userCreate.setEmail(user.getEmail());
         userCreate.setRole("Costumer");
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         }
         UserCreateResponseDTO userRes = new UserCreateResponseDTO();
         userRes.setEmail(user.getEmail());
-        userRes.setName(user.getFullname());
+        userRes.setName(user.getFullName());
         return userRes;
     }
 
@@ -347,7 +347,7 @@ public class UserServiceImpl implements UserService {
     useRes.setAddress(addInforUserRequestDTO.getAddress());
     useRes.setImage(addInforUserRequestDTO.getImage());
     useRes.setSex(addInforUserRequestDTO.getSex());
-    useRes.setBirthDay(addInforUserRequestDTO.getBirthday());
+    useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
     userRepository.save(useRes);
   }
 }

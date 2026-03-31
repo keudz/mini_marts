@@ -16,8 +16,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
        @Query(value = "SELECT u.* From users u where u.ID_USER = :id",nativeQuery = true)
        User selectUserById(@Param("id") int id );
 
-       //dùng JPQL
-       User findByFullname(String name);
+
        @Query("SELECT user From User user where user.email = :email AND user.password = :password ")
        //User là tên của class chứ k phải tên của table bảng users
        User selectUserByEmailAndPassWord(@Param("email") String email,@Param("password") String password);
@@ -36,10 +35,17 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
        @Transactional
        @Modifying
-       @Query("Update User u set u.status = 'block' Where u.fullname = :name")
-       int blockUserStatus(@Param("name") String name);
+       @Query("Update User u set u.status = 'block' Where u.idUser = :id")
+       int blockUser(@Param("id") int id);
 
-       @Query("SELECT user From User user where user.fullname = :name")
+       @Transactional//
+       @Modifying
+       @Query("update User u set u.status = 'active' where u.idUser =:id ")
+       int activeUser(@Param("id") int id);
+
+
+
+       @Query("SELECT u FROM User u WHERE u.fullName = :name")
        User selectUserByName(@Param("name") String name);
 
 

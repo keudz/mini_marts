@@ -16,18 +16,18 @@ public class AddInforUserRequestDTO {
 
     private String sex;
 
-    private LocalDate birthday;
+    private LocalDate birthDay;
 
     private String image;
 
     public AddInforUserRequestDTO() {
     }
 
-    public AddInforUserRequestDTO(String realName, String address, BigInteger numberPhone, String sex, LocalDate birthday) {
+    public AddInforUserRequestDTO(String realName, String address, BigInteger numberPhone, String sex, LocalDate birthDay) {
         this.realName = realName;
         this.address = address;
         this.numberPhone = numberPhone;
         this.sex = sex;
-        this.birthday = birthday;
+        this.birthDay = birthDay;
     }
 }
