@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserCreateResponseDTO registerUser(UserCreateRequestDTO user) {
+    public UserCreateResponseDTO registerUser(UserCreateRequestDTO user){
         userValidateServiceImpl.ValidateCheckCreate(user);
         User userCreate = new User();
         userCreate.setFullName(user.getFullName());
