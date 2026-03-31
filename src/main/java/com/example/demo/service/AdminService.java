@@ -10,7 +10,7 @@ import com.example.demo.entity.User;
 import java.util.List;
 
 public interface AdminService {
-  List<User> showAllUser();
+  List<UserResponDTO> showAllUser();
 
   void blockUser(int id);
 

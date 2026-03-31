@@ -4,8 +4,11 @@ import com.example.demo.constant.UrlConstant;
 import com.example.demo.dto.request.ProductRequestDTO;
 import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
+import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
 import com.example.demo.service.AdminService;
+import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -55,10 +58,25 @@ public class AdminController {
     }
 
     @Autowired
+    private UserService getUser;
+    @PostMapping(UrlConstant.API_V1_GET_USER)
+    public UserCreateResponseDTO GetUser(@RequestBody int id) {
+        return getUser.getUserById(id);
+    }
+
+
+    @Autowired
     private AdminService showProductAdmin;
     @PostMapping(UrlConstant.API_V1_SHOW_ALL_PRODUCT1)
     public List<ProductResponseDTO> showAllProduct() {
         return showProductAdmin.showAllProduct();
+    }
+
+    @Autowired
+    private AdminService showAllUsers;
+    @PostMapping(UrlConstant.SHOW_ALL_USER)
+    public List<UserResponDTO>  showAllUsers() {
+        return showAllUsers.showAllUser();
     }
 
 

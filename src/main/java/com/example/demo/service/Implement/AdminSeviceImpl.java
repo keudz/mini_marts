@@ -29,8 +29,25 @@ public class AdminSeviceImpl implements AdminService {
 
   @Override
 
-   public List<User>  showAllUser() {
-      return userRepository.findAll();
+   public List<UserResponDTO>  showAllUser() {
+      List<User> userList = userRepository.findAll();
+      List<UserResponDTO> userResponDTOList = new ArrayList<>();
+      for(User user:userList){
+      UserResponDTO userResponDTO = new UserResponDTO();
+      userResponDTO.setEmail(user.getEmail());
+      userResponDTO.setIdUser(user.getIdUser());
+      userResponDTO.setStatus(user.getStatus());
+      userResponDTO.setAddress(user.getAddress());
+      userResponDTO.setRole(user.getRole());
+      userResponDTO.setBirthDay(user.getBirthDay());
+      userResponDTO.setSex(user.getSex());
+      userResponDTO.setImage(user.getImage());
+      userResponDTO.setNumberPhone(user.getNumberPhone());
+      userResponDTO.setRealName(user.getRealName());
+      userResponDTO.setFullName(user.getFullName());
+      userResponDTOList.add(userResponDTO);
+      }
+      return userResponDTOList;
   }
 
   @Override

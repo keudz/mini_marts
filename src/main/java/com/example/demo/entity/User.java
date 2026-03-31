@@ -19,16 +19,16 @@ public class User {
 
     private String email;
     private String password;
-    private String fullname;
+    @Column(name = "full_name")
+    private String fullName;
     private String status;
     private String role;
     @Column(name = "real_name")
     private String realName;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "number_phone") // Ép Hibernate dùng đúng tên này, không tự thêm gạch dưới
+    @Column(name = "number_phone")
     private BigInteger numberPhone;
 
     @Column(name = "birth_day")

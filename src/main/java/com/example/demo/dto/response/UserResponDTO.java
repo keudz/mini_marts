@@ -1,57 +1,37 @@
 package com.example.demo.dto.response;
 
+import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponDTO {
-    private int ID_USER;
+    private Integer idUser;
 
     private String email;
 
-    private String fullname;
+    private String password;
+
+    private String fullName;
 
     private String status;
 
     private String role;
 
-    public UserResponDTO() {
-    }
+    private String realName;
 
-    public int getID_USER() {
-        return ID_USER;
-    }
+    private String address;
 
-    public void setID_USER(int ID_USER) {
-        this.ID_USER = ID_USER;
-    }
+    private BigInteger numberPhone;
 
-    public String getEmail() {
-        return email;
-    }
+    private LocalDate birthDay;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    private String sex;
 
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    private String image;
 }

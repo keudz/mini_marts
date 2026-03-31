@@ -14,7 +14,7 @@ public class Product {
     private int ID_PRODUCT;
 
     private String name;
-
+    @Column(length = 10000)
     private String description;
 
     private double price;
