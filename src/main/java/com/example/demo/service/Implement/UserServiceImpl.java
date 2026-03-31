@@ -105,6 +105,14 @@ public class UserServiceImpl implements UserService {
         }
 
         Cart cart = user.getCart();
+
+        if (cart == null) {
+            cart = new Cart();
+            cart.setUser(user);
+            cart.setCartItermList(new ArrayList<>()); // Đảm bảo list không bị null
+            user.setCart(cart);
+        }
+
         Cart_Iterm existingItem = null;
         for (Cart_Iterm item : cart.getCartItermList()) {
             if (item.getProduct().getID_PRODUCT() == product.getID_PRODUCT()) {

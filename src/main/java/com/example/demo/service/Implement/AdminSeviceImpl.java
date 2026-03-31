@@ -27,53 +27,53 @@ public class AdminSeviceImpl implements AdminService {
     @Autowired
     private ProductRepository  productRepository;
 
-  @Override
+    @Override
 
-   public List<UserResponDTO>  showAllUser() {
-      List<User> userList = userRepository.findAll();
-      List<UserResponDTO> userResponDTOList = new ArrayList<>();
-      for(User user:userList){
-      UserResponDTO userResponDTO = new UserResponDTO();
-      userResponDTO.setEmail(user.getEmail());
-      userResponDTO.setIdUser(user.getIdUser());
-      userResponDTO.setStatus(user.getStatus());
-      userResponDTO.setAddress(user.getAddress());
-      userResponDTO.setRole(user.getRole());
-      userResponDTO.setBirthDay(user.getBirthDay());
-      userResponDTO.setSex(user.getSex());
-      userResponDTO.setImage(user.getImage());
-      userResponDTO.setNumberPhone(user.getNumberPhone());
-      userResponDTO.setRealName(user.getRealName());
-      userResponDTO.setFullName(user.getFullName());
-      userResponDTOList.add(userResponDTO);
-      }
-      return userResponDTOList;
-  }
+    public List<UserResponDTO>  showAllUser() {
+        List<User> userList = userRepository.findAll();
+        List<UserResponDTO> userResponDTOList = new ArrayList<>();
+        for(User user:userList){
+            UserResponDTO userResponDTO = new UserResponDTO();
+            userResponDTO.setEmail(user.getEmail());
+            userResponDTO.setIdUser(user.getIdUser());
+            userResponDTO.setStatus(user.getStatus());
+            userResponDTO.setAddress(user.getAddress());
+            userResponDTO.setRole(user.getRole());
+            userResponDTO.setBirthDay(user.getBirthDay());
+            userResponDTO.setSex(user.getSex());
+            userResponDTO.setImage(user.getImage());
+            userResponDTO.setNumberPhone(user.getNumberPhone());
+            userResponDTO.setRealName(user.getRealName());
+            userResponDTO.setFullName(user.getFullName());
+            userResponDTOList.add(userResponDTO);
+        }
+        return userResponDTOList;
+    }
 
-  @Override
+    @Override
     public void blockUser(int id) {
-       userRepository.blockUser(id);
-  }
-  @Override
-  public void unlockUser(int id) {
-      userRepository.activeUser(id);
-  }
+        userRepository.blockUser(id);
+    }
+    @Override
+    public void unlockUser(int id) {
+        userRepository.activeUser(id);
+    }
 
 
-  @Override
+    @Override
     public Product addProduct(ProductRequestDTO  product) {
-      Product newProduct = new Product();
-      newProduct.setName(product.getName());
-      newProduct.setPrice(product.getPrice());
-      newProduct.setCategory(product.getCategory());
-      newProduct.setOriginal_price(product.getOriginalPrice());
-      newProduct.setStock(product.getStock());
-      newProduct.setDescription(product.getDescription());
-      newProduct.setImagelink(product.getImagelink());
-      newProduct.setSubCategory(product.getSubCategory());
-      productRepository.save(newProduct);
-      return newProduct;
-      }
+        Product newProduct = new Product();
+        newProduct.setName(product.getName());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setCategory(product.getCategory());
+        newProduct.setOriginal_price(product.getOriginalPrice());
+        newProduct.setStock(product.getStock());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setImagelink(product.getImagelink());
+        newProduct.setSubCategory(product.getSubCategory());
+        productRepository.save(newProduct);
+        return newProduct;
+    }
 
 
     @Override
@@ -119,32 +119,31 @@ public class AdminSeviceImpl implements AdminService {
 
     @Override
     public Product deleteProduct (int id) {
-      Optional<Product> product = productRepository.findById(id);
-      if(product.isPresent()){
-          Product product1 = product.get();
-          productRepository.deleteById(id);
-          return product1;
-      }
-         return null;
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            Product product1 = product.get();
+            productRepository.deleteById(id);
+            return product1;
+        }
+        return null;
     }
 
     @Override
     public List<ProductResponseDTO> showAllProduct() {
-      List<Product> productOriginal = productRepository.findAll();
-      List<ProductResponseDTO> ListProductRespon = new ArrayList<>();
-      for(Product product : productOriginal){
-          ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-          productResponseDTO.setId(product.getID_PRODUCT());
-          productResponseDTO.setNameProduct(product.getName());
-          productResponseDTO.setPriceProduct(product.getPrice());
-          productResponseDTO.setQuantity(product.getStock());
-          productResponseDTO.setDescriptionProduct(product.getDescription());
-          productResponseDTO.setCategoryProduct(product.getCategory());
-          productResponseDTO.setImageLink(product.getImagelink());
-          productResponseDTO.setSubCategoryProduct(product.getSubCategory());
-          ListProductRespon.add(productResponseDTO);
-      }
-      return ListProductRespon;
+        List<Product> productOriginal = productRepository.findAll();
+        List<ProductResponseDTO> ListProductRespon = new ArrayList<>();
+        for(Product product : productOriginal){
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setId(product.getID_PRODUCT());
+            productResponseDTO.setNameProduct(product.getName());
+            productResponseDTO.setPriceProduct(product.getPrice());
+            productResponseDTO.setQuantity(product.getStock());
+            productResponseDTO.setDescriptionProduct(product.getDescription());
+            productResponseDTO.setCategoryProduct(product.getCategory());
+            productResponseDTO.setImageLink(product.getImagelink());
+            productResponseDTO.setSubCategoryProduct(product.getSubCategory());
+            ListProductRespon.add(productResponseDTO);
+        }
+        return ListProductRespon;
     }
 }
-
