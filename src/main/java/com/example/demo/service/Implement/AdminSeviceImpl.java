@@ -1,5 +1,7 @@
 package com.example.demo.service.Implement;
 
+import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
@@ -25,100 +27,123 @@ public class AdminSeviceImpl implements AdminService {
     @Autowired
     private ProductRepository  productRepository;
 
-  @Override
+    @Override
 
-   public List<User>  showAllUser() {
-      return userRepository.findAll();
-  }
-
-//  @Override
-//    public UserResponDTO blockUser(String name) {
-//      UserResponDTO userResponDTO = new UserResponDTO();
-//      int rowEffect  = userRepository.blockUserStatus(name.getName());
-//      if(rowEffect <= 0){
-//       throw new ApiException(404,"user not found");
-//
-//      }
-//      User user =  userRepository.selectUserByName(name.getName());
-//      userResponDTO.setID_USER(user.getID_USER());
-//      userResponDTO.setEmail(user.getEmail());
-//     userResponDTO.setFullname(user.getFullname());
-//     userResponDTO.setRole(user.getRole());
-//     userResponDTO.setStatus(user.getStatus());
-//
-//      return userResponDTO;
-//  }
-
-
-  @Override
-    public Product addProduct(Product product) {
-      Product newProduct = new Product();
-      newProduct.setName(product.getName());
-      newProduct.setPrice(product.getPrice());
-      newProduct.setCategory(product.getCategory());
-      newProduct.setOriginal_price(product.getOriginal_price());
-      newProduct.setStock(product.getStock());
-      productRepository.save(newProduct);
-      return newProduct;
-      }
-
-
-  @Override
-  public Product updateProduct (int id,String Attribute , String information) {
-
-   Optional<Product> Product = productRepository.findById(id);
-   if(Product.isPresent()){
-       Product newProduct = Product.get();// để lấy các phương thức ở trong newProduct thì cần phai khai báo thêm dòng này
-    if(Attribute.equals("name")){
-       newProduct.setName(information);
+    public List<UserResponDTO>  showAllUser() {
+        List<User> userList = userRepository.findAll();
+        List<UserResponDTO> userResponDTOList = new ArrayList<>();
+        for(User user:userList){
+            UserResponDTO userResponDTO = new UserResponDTO();
+            userResponDTO.setEmail(user.getEmail());
+            userResponDTO.setIdUser(user.getIdUser());
+            userResponDTO.setStatus(user.getStatus());
+            userResponDTO.setAddress(user.getAddress());
+            userResponDTO.setRole(user.getRole());
+            userResponDTO.setBirthDay(user.getBirthDay());
+            userResponDTO.setSex(user.getSex());
+            userResponDTO.setImage(user.getImage());
+            userResponDTO.setNumberPhone(user.getNumberPhone());
+            userResponDTO.setRealName(user.getRealName());
+            userResponDTO.setFullName(user.getFullName());
+            userResponDTOList.add(userResponDTO);
+        }
+        return userResponDTOList;
     }
-    if(Attribute.equals("price")){
-        newProduct.setPrice(Double.parseDouble(information));//Double.parseDouble:là hàm chuyền từ String sang Double
+
+    @Override
+    public void blockUser(int id) {
+        userRepository.blockUser(id);
     }
-    if(Attribute.equals("category")){
-        newProduct.setCategory(information);
+    @Override
+    public void unlockUser(int id) {
+        userRepository.activeUser(id);
     }
-    if(Attribute.equals("original_price")){
-        newProduct.setOriginal_price(Double.parseDouble(information));
-          }
-    if(Attribute.equals("stock")){
-        newProduct.setStock(Integer.parseInt(information));
+
+
+    @Override
+    public Product addProduct(ProductRequestDTO  product) {
+        Product newProduct = new Product();
+        newProduct.setName(product.getName());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setCategory(product.getCategory());
+        newProduct.setOriginal_price(product.getOriginalPrice());
+        newProduct.setStock(product.getStock());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setImagelink(product.getImagelink());
+        newProduct.setSubCategory(product.getSubCategory());
+        productRepository.save(newProduct);
+        return newProduct;
     }
-    productRepository.save(newProduct);
-    return newProduct;
-       }
-     throw new ApiException(404,"product not found");
+
+
+    @Override
+    public Product updateProduct(UpdateProductRequestDTO update) {
+        // 1. Tìm sản phẩm trong DB bằng ID từ DTO
+        Optional<Product> productOptional = productRepository.findById(update.getId());
+
+        if (productOptional.isPresent()) {
+            Product existingProduct = productOptional.get();
+
+            // Lấy các giá trị từ DTO
+            String attribute = update.getAttribute().toLowerCase();
+            String information = update.getInformation();
+
+            // 2. Kiểm tra Attribute nào cần update bằng if-else
+            if (attribute.equals("name")) {
+                existingProduct.setName(information);
+            }
+            else if (attribute.equals("price")) {
+                existingProduct.setPrice(Double.parseDouble(information));
+            }
+            else if (attribute.equals("category")) {
+                existingProduct.setCategory(information);
+            }
+            else if (attribute.equals("original_price") || attribute.equals("originalprice")) {
+                existingProduct.setOriginal_price(Double.parseDouble(information));
+            }
+            else if (attribute.equals("stock")) {
+                existingProduct.setStock(Integer.parseInt(information));
+            }
+            else if (attribute.equals("description")) {
+                existingProduct.setDescription(information);
+            }
+
+            // 3. Lưu và trả về kết quả
+            return productRepository.save(existingProduct);
+        }
+
+        // 4. Báo lỗi nếu không tìm thấy ID
+        throw new ApiException(404, "Không tìm thấy sản phẩm có ID: " + update.getId());
     }
 
 
     @Override
     public Product deleteProduct (int id) {
-      Optional<Product> product = productRepository.findById(id);
-      if(product.isPresent()){
-          Product product1 = product.get();
-          productRepository.deleteById(id);
-          return product1;
-      }
-         return null;
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            Product product1 = product.get();
+            productRepository.deleteById(id);
+            return product1;
+        }
+        return null;
     }
 
     @Override
     public List<ProductResponseDTO> showAllProduct() {
-      List<Product> productOriginal = productRepository.findAll();
-      List<ProductResponseDTO> ListProductRespon = new ArrayList<>();
-      for(Product product : productOriginal){
-          ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-          productResponseDTO.setId(product.getID_PRODUCT()  );
-          productResponseDTO.setNameProduct(product.getName());
-          productResponseDTO.setDescriptionProduct(product.getDescription());
-          productResponseDTO.setPriceProduct(product.getPrice());
-          productResponseDTO.setQuantity(product.getStock());
-          productResponseDTO.setCategoryProduct(product.getCategory());
-          productResponseDTO.setSubCategoryProduct(product.getSubCategory());
-          productResponseDTO.setImageLink(product.getImagelink());
-          ListProductRespon.add(productResponseDTO);
-      }
-      return ListProductRespon;
+        List<Product> productOriginal = productRepository.findAll();
+        List<ProductResponseDTO> ListProductRespon = new ArrayList<>();
+        for(Product product : productOriginal){
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setId(product.getID_PRODUCT());
+            productResponseDTO.setNameProduct(product.getName());
+            productResponseDTO.setPriceProduct(product.getPrice());
+            productResponseDTO.setQuantity(product.getStock());
+            productResponseDTO.setDescriptionProduct(product.getDescription());
+            productResponseDTO.setCategoryProduct(product.getCategory());
+            productResponseDTO.setImageLink(product.getImagelink());
+            productResponseDTO.setSubCategoryProduct(product.getSubCategory());
+            ListProductRespon.add(productResponseDTO);
+        }
+        return ListProductRespon;
     }
 }
-
