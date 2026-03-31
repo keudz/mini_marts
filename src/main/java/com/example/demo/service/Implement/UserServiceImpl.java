@@ -347,7 +347,7 @@ public class UserServiceImpl implements UserService {
     useRes.setAddress(addInforUserRequestDTO.getAddress());
     useRes.setImage(addInforUserRequestDTO.getImage());
     useRes.setSex(addInforUserRequestDTO.getSex());
-    useRes.setBirthDay(addInforUserRequestDTO.getBirthday());
+    useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
     userRepository.save(useRes);
   }
 }
