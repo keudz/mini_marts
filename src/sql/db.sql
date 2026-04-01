@@ -602,3 +602,6 @@ where product.name = N'Balo thời trang'
 
 select * from mini_mart_dev.product
 where product.name = N'SSD di động 512GB'
+
+select * from mini_mart_dev.product
+where ID_PRODUCT = 1;

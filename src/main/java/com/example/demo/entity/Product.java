@@ -20,8 +20,8 @@ public class Product {
     private double price;
 
     private int stock;
-
-    private double original_price;
+   @Column(name = "original_price")
+    private double originalPrice;
 
     private String category;
 //    nhưng Hibernate (công cụ mapping của Spring Boot) có một cơ chế mặc định gọi là Implicit Naming Strategy.

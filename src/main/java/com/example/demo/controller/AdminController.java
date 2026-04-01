@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.constant.UrlConstant;
 import com.example.demo.dto.request.ProductRequestDTO;
-import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
-import com.example.demo.entity.Product;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -46,8 +44,8 @@ public class AdminController {
     @Autowired
     private AdminService updateProduct;
     @PatchMapping(UrlConstant.API_V1_UPDATE_PRODUCT)
-    public Object updateProduct(@RequestBody UpdateProductRequestDTO update) {
-        return updateProduct.updateProduct(update);
+    public void updateProduct(@RequestBody ProductRequestDTO update) {
+              updateProduct.updateProduct(update);
     }
 
     @Autowired

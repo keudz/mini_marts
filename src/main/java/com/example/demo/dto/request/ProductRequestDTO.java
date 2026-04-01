@@ -12,17 +12,17 @@ import java.io.Serializable;
 @NoArgsConstructor // Tạo Constructor không tham số
 public class ProductRequestDTO {
 
-    private int idProduct;
+    private int id;
 
     private String name;
 
     private String description;
 
-    private double price;
+    private Double price;
 
-    private int stock;
+    private Integer stock;
 
-    private double originalPrice;
+    private Double originalPrice;
 
     private String category;
 

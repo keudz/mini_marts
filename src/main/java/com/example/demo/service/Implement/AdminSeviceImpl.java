@@ -1,7 +1,6 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.ProductRequestDTO;
-import com.example.demo.dto.request.UpdateProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Product;
@@ -58,7 +57,7 @@ public class AdminSeviceImpl implements AdminService {
         newProduct.setName(product.getName());
         newProduct.setPrice(product.getPrice());
         newProduct.setCategory(product.getCategory());
-        newProduct.setOriginal_price(product.getOriginalPrice());
+        newProduct.setOriginalPrice(product.getOriginalPrice());
         newProduct.setStock(product.getStock());
         newProduct.setDescription(product.getDescription());
         newProduct.setImagelink(product.getImagelink());
@@ -69,43 +68,41 @@ public class AdminSeviceImpl implements AdminService {
 
 
     @Override
-    public Product updateProduct(UpdateProductRequestDTO update) {
-        // 1. Tìm sản phẩm trong DB bằng ID từ DTO
-        Optional<Product> productOptional = productRepository.findById(update.getId());
+    public void updateProduct(ProductRequestDTO update) {
+     Optional<Product> productOptional = productRepository.findById(update.getId());
 
-        if (productOptional.isPresent()) {
-            Product existingProduct = productOptional.get();
+     if(productOptional.isPresent()){
+         Product product = productOptional.get();
+         if(update.getName()!=null){
+             product.setName(update.getName());
+         }
+         if(update.getCategory()!=null){
+             product.setCategory(update.getCategory());
+         }
+         if(update.getDescription() != null && !update.getDescription().isEmpty()){
+             product.setDescription(update.getDescription());
+         }
+         if(update.getImagelink()!=null){
+             product.setImagelink(update.getImagelink());
+         }
+         if(update.getSubCategory()!=null){
+             product.setSubCategory(update.getSubCategory());
+         }
+         if(update.getOriginalPrice() != null){
+             product.setOriginalPrice(update.getOriginalPrice());
+         }
+         if(update.getPrice() != null){
+             product.setPrice(update.getPrice());
+         }
+         if(update.getStock() != null){
+             product.setStock(update.getStock());
+         }
+         productRepository.save(product);
+     }
+     else{
+         throw new ApiException(404, "product  not found");
+     }
 
-            // Lấy các giá trị từ DTO
-            String attribute = update.getAttribute().toLowerCase();
-            String information = update.getInformation();
-
-            // 2. Kiểm tra Attribute nào cần update bằng if-else
-            if (attribute.equals("name")) {
-                existingProduct.setName(information);
-            }
-            else if (attribute.equals("price")) {
-                existingProduct.setPrice(Double.parseDouble(information));
-            }
-            else if (attribute.equals("category")) {
-                existingProduct.setCategory(information);
-            }
-            else if (attribute.equals("original_price") || attribute.equals("originalprice")) {
-                existingProduct.setOriginal_price(Double.parseDouble(information));
-            }
-            else if (attribute.equals("stock")) {
-                existingProduct.setStock(Integer.parseInt(information));
-            }
-            else if (attribute.equals("description")) {
-                existingProduct.setDescription(information);
-            }
-
-            // 3. Lưu và trả về kết quả
-            return productRepository.save(existingProduct);
-        }
-
-        // 4. Báo lỗi nếu không tìm thấy ID
-        throw new ApiException(404, "Không tìm thấy sản phẩm có ID: " + update.getId());
     }
 
 
@@ -127,13 +124,13 @@ public class AdminSeviceImpl implements AdminService {
         for(Product product : productOriginal){
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setId(product.getID_PRODUCT());
-            productResponseDTO.setNameProduct(product.getName());
-            productResponseDTO.setPriceProduct(product.getPrice());
-            productResponseDTO.setQuantity(product.getStock());
-            productResponseDTO.setDescriptionProduct(product.getDescription());
-            productResponseDTO.setCategoryProduct(product.getCategory());
+            productResponseDTO.setName(product.getName());
+            productResponseDTO.setPrice(product.getPrice());
+            productResponseDTO.setStock(product.getStock());
+            productResponseDTO.setDescription(product.getDescription());
+            productResponseDTO.setCategory(product.getCategory());
             productResponseDTO.setImageLink(product.getImagelink());
-            productResponseDTO.setSubCategoryProduct(product.getSubCategory());
+            productResponseDTO.setSubCategory(product.getSubCategory());
             ListProductRespon.add(productResponseDTO);
         }
         return ListProductRespon;
