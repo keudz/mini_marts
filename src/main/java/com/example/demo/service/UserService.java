@@ -4,11 +4,12 @@ import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.AddProductInCartResponseDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.UserResponDTO;
 
 import java.util.List;
 
 public interface UserService {
-    UserCreateResponseDTO login(UserLoginRequestDTO user);
+    UserResponDTO login(UserLoginRequestDTO user);
 
     UserCreateResponseDTO registerUser (UserCreateRequestDTO user);
 

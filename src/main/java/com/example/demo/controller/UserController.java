@@ -3,10 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.constant.UrlConstant;
 import com.example.demo.dto.request.*;
-import com.example.demo.dto.response.AddProductInCartResponseDTO;
-import com.example.demo.dto.response.OrderResponceDTO;
-import com.example.demo.dto.response.ProductResponseDTO;
-import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.*;
 import com.example.demo.entity.Product;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.UserService;
@@ -33,7 +30,7 @@ public class UserController {
     @Autowired
     private UserService userLoginAcount;
     @PostMapping(UrlConstant.API_V1_LOGIN_USERS)
-    public UserCreateResponseDTO LoginUser(@Valid @RequestBody UserLoginRequestDTO user) {
+    public UserResponDTO LoginUser(@Valid @RequestBody UserLoginRequestDTO user) {
        return userLoginAcount.login(user);
     }
 

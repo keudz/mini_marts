@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserCreateResponseDTO login(UserLoginRequestDTO user) {
+    public UserResponDTO login(UserLoginRequestDTO user) {
        return userValidateServiceImpl.ValidateCheckLogin(user);
 
 }

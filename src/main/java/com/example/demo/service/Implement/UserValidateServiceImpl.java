@@ -3,8 +3,10 @@ package com.example.demo.service.Implement;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserValidateSevice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,11 @@ import org.springframework.stereotype.Service;
 public class UserValidateServiceImpl implements UserValidateSevice {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserMapper userMapper;
 
     @Override
-    public UserCreateResponseDTO ValidateCheckLogin(UserLoginRequestDTO user) {
+    public UserResponDTO ValidateCheckLogin(UserLoginRequestDTO user) {
         User userRes = userRepository.selectUserByEmail(user.getEmail());
         UserCreateResponseDTO userCreateResponseDTO = new UserCreateResponseDTO();
         if (userRes == null) {
@@ -26,9 +30,8 @@ public class UserValidateServiceImpl implements UserValidateSevice {
             throw new ApiException(400, "Invalid email or password");
         }
 
-        userCreateResponseDTO.setEmail(userRes.getEmail());
-        userCreateResponseDTO.setName(userRes.getFullName());
-        return userCreateResponseDTO;
+
+        return userMapper.userToUserResponDTO(userRes);
 
 
 
