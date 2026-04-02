@@ -8,8 +8,13 @@ import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.secutity.JwtTokenProvider;
 import com.example.demo.service.UserValidateSevice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,34 +24,49 @@ public class UserValidateServiceImpl implements UserValidateSevice {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
     @Override
-    public UserResponDTO ValidateCheckLogin(UserLoginRequestDTO user) {
-        User userRes = userRepository.selectUserByEmail(user.getEmail());
-        UserCreateResponseDTO userCreateResponseDTO = new UserCreateResponseDTO();
-        if (userRes == null) {
-            throw new ApiException(404, "Use not found !");
+    public UserResponDTO ValidateCheckLogin(UserLoginRequestDTO userRequest) {
+        // 1. Dùng AuthenticationManager để xác thực (Tự động check Email & Password BCrypt)
+        // Nó sẽ tự gọi CustomUserDetailsServiceImpl mà bạn đã viết trước đó
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            userRequest.getEmail(),
+                            userRequest.getPassword()
+                    )
+            );
+
+            // 2. Nếu đăng nhập thành công, tạo Token
+            String jwt = tokenProvider.generateToken(authentication);
+
+            // 3. Lấy thông tin User từ DB để trả về
+            User userRes = userRepository.selectUserByEmail(userRequest.getEmail());
+
+            // 4. Map sang DTO và đính kèm Token
+            UserResponDTO response = userMapper.userToUserResponDTO(userRes);
+            response.setToken(jwt); // Đảm bảo bạn đã thêm field 'token' vào UserResponDTO
+
+            return response;
+
+        } catch (BadCredentialsException e) {
+            // Thay thế cho đoạn check password thủ công của bạn
+            throw new ApiException(400, "Email hoặc mật khẩu không chính xác!");
         }
-        if (!userRes.getPassword().equals(user.getPassword())) {
-            throw new ApiException(400, "Invalid email or password");
-        }
-
-
-        return userMapper.userToUserResponDTO(userRes);
-
-
-
     }
+
 
     @Override
     public void ValidateCheckCreate(UserCreateRequestDTO user) {
         User useResByEmail = userRepository.selectUserByEmail(user.getEmail());
-        User useResByPassword = userRepository.selectUserByPassword(user.getPassword());
         if (useResByEmail != null) {
-            throw new ApiException(400, "Account already exists");
+            throw new ApiException(400, "Email đã được đăng ký bởi tài khoản khác!");
         }
-        if (useResByPassword != null) {
-            throw new ApiException(400, "Password already exists");
-        }
-
+        // BỎ đoạn check password cũ đi
     }
 }

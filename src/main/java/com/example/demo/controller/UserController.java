@@ -10,6 +10,8 @@ import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +56,8 @@ public class UserController {
      @Autowired
      private UserService userCheckListProduct;
      @PostMapping(UrlConstant.USER_CHECK_LIST_PRODUCT)
-    public Object userCheckListProduct(@Valid @RequestBody EmailRequest emailRequest) {
+    public Object userCheckListProduct(@Valid @RequestBody EmailRequest emailRequest,Authentication authentication) {
+         System.out.println("Authorities từ SecurityContext: " + authentication.getAuthorities());
              return  userCheckListProduct.userCheckListProductInCart(emailRequest);
      }
 

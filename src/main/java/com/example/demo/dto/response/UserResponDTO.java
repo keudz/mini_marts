@@ -32,4 +32,6 @@ public class UserResponDTO {
     private String sex;
 
     private String image;
+
+    private String token;
 }

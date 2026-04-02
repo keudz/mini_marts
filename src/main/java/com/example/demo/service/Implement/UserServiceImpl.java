@@ -7,6 +7,7 @@ import com.example.demo.exception.ApiException;
 import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class UserServiceImpl implements UserService {
     private CartItemRepository cartItemRepository;
     @Autowired
     private OrderRepository orderRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
 
@@ -34,12 +36,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserCreateResponseDTO registerUser(UserCreateRequestDTO user){
         userValidateServiceImpl.ValidateCheckCreate(user);
+
         User userCreate = new User();
         userCreate.setFullName(user.getFullName());
-        userCreate.setPassword(user.getPassword());
+
+        // MÃ HÓA MẬT KHẨU TẠI ĐÂY
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        userCreate.setPassword(encodedPassword);
+
         userCreate.setEmail(user.getEmail());
-        userCreate.setRole("Costumer");
+        userCreate.setRole("user"); // Lưu ý: Nên để "user" viết thường cho khớp với hasAuthority("user")
         userCreate.setStatus("Active");
+
         userRepository.save(userCreate);
         Cart cart = new Cart();
         userCreate.setCart(cart);
