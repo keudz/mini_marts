@@ -20,6 +20,9 @@ public class Orders {
     private double TATAL_AMOUNT;
 
     private int USER_ID;
+
+    @Column(name =  "is_delete")
+    private Boolean isDelete;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order_Iterm> orderItermList;
 

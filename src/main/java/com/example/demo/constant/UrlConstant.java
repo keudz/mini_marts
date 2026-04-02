@@ -19,6 +19,12 @@ public class UrlConstant {
     public static final String ADD_INFOR_USER = "api/v1/addInforUser";
     public static final String UNLOCK_USER = "api/v1/unlockUser";
     public static final String SHOW_ALL_USER = "api/v1/showAllUser";
+    public static final String REDO_PRODUCT_FOR_ADMIN = "/api/v1/redoProductForAdmin";
+    public static final String GET_ALL_USERS_FOR_ADMIN = "/api/v1/admin/users";
+    public static final String GET_ALL_ORDERS_FOR_ADMIN = "/api/v1/admin/orders";
+    public static final String SET_SHIPPING_FOR_ORDER = "/api/v1/admin/orders/shipping";
+    public static final String SET_COMPLETED_FOR_ORDER = "/api/v1/admin/orders/completed";
+
 
 
 

@@ -53,7 +53,8 @@ public class SecurityConfig {
                                 UrlConstant.API_V1_UPDATE_PRODUCT,
                                 UrlConstant.API_V1_SHOW_ALL_PRODUCT1,
                                 UrlConstant.UNLOCK_USER,
-                                UrlConstant.SHOW_ALL_USER
+                                UrlConstant.SHOW_ALL_USER,
+                                UrlConstant.REDO_PRODUCT_FOR_ADMIN
                         ).hasAuthority("admin")
 
                         // 3. NHÓM CHỨC NĂNG CHO USER (Admin cũng có quyền vào)

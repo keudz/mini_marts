@@ -19,33 +19,9 @@ CREATE TABLE users (
                        birth_day DATE,
                        address VARCHAR(100),
                        sex VARCHAR(10),
-                       image TEXT
+                       image TEXT,
+                       is_delete boolean not null
 );
-
-INSERT INTO users (ID_USER, email, password, full_name, status, role, real_name, number_phone, birth_day, address, sex, image) VALUES
-                                                                                                                               (1, 'admin1@gmail.com', '123456', 'Nguyễn Quản Trị', 'active', 'admin', 'Nguyễn Văn Quản Trị', 0901234567, '1990-01-01', '123 Đường Lê Lợi, Quận 1, TP.HCM', 'Male', NULL),
-                                                                                                                               (2, 'manager@gmail.com', '123456', 'Trần Quản Lý', 'active', 'admin', 'Trần Minh Quản Lý', 0902345678, '1992-05-15', '456 Đường Trần Hưng Đạo, Quận 5, TP.HCM', 'Male', NULL),
-                                                                                                                               (3, 'user3@gmail.com', '123456', 'Lê Văn Ba', 'active', 'user', 'Lê Văn Ba', 0903456789, '1995-03-20', '789 Đường CMT8, Quận 10, TP.HCM', 'Male', NULL),
-                                                                                                                               (4, 'user4@gmail.com', '123456', 'Phạm Thị Bốn', 'inactive', 'user', 'Phạm Thị Bốn', 0904567890, '1998-11-02', '12 Đường Láng, Quận Đống Đa, Hà Nội', 'Female', NULL),
-                                                                                                                               (5, 'user5@gmail.com', '123456', 'Hoàng Văn Năm', 'active', 'user', 'Hoàng Văn Năm', 0905678901, '1993-07-12', '34 Đường Cầu Giấy, Quận Cầu Giấy, Hà Nội', 'Male', NULL),
-                                                                                                                               (6, 'user6@gmail.com', '123456', 'Đặng Thị Sáu', 'active', 'user', 'Đặng Thị Sáu', 0906789012, '1996-09-25', '56 Đường Kim Mã, Quận Ba Đình, Hà Nội', 'Female', NULL),
-                                                                                                                               (7, 'user7@gmail.com', '123456', 'Bùi Văn Bảy', 'active', 'user', 'Bùi Văn Bảy', 0907890123, '1994-12-30', '89 Đường Nguyễn Trãi, Quận Thanh Xuân, Hà Nội', 'Male', NULL),
-                                                                                                                               (8, 'user8@gmail.com', '123456', 'Vũ Thị Tám', 'banned', 'user', 'Vũ Thị Tám', 0908901234, '1991-02-14', '101 Đường Trần Phú, Quận Hà Đông, Hà Nội', 'Female', NULL),
-                                                                                                                               (9, 'user9@gmail.com', '123456', 'Phan Văn Chín', 'active', 'user', 'Phan Văn Chín', 0909012345, '1997-06-05', '202 Đường Hùng Vương, Đà Nẵng', 'Male', NULL),
-                                                                                                                               (10, 'user10@gmail.com', '123456', 'Đỗ Thị Mười', 'active', 'user', 'Đỗ Thị Mười', 0910123456, '1999-08-21', '303 Đường Điện Biên Phủ, Đà Nẵng', 'Female', NULL),
-                                                                                                                               (11, 'user11@gmail.com', '123456', 'Ngô Văn Mười Một', 'active', 'user', 'Ngô Văn Mười Một', 0911234567, '1990-10-10', '11 Đường Lý Thường Kiệt, Hải Phòng', 'Male', NULL),
-                                                                                                                               (12, 'user12@gmail.com', '123456', 'Dương Thị Mười Hai', 'active', 'user', 'Dương Thị Mười Hai', 0912345678, '1992-11-11', '12 Đường Lạch Tray, Hải Phòng', 'Female', NULL),
-                                                                                                                               (13, 'user13@gmail.com', '123456', 'Lý Văn Mười Ba', 'active', 'user', 'Lý Văn Mười Ba', 0913456789, '1993-03-13', '13 Đường Võ Văn Kiệt, Cần Thơ', 'Male', NULL),
-                                                                                                                               (14, 'user14@gmail.com', '123456', 'Trần Văn Tùng', 'active', 'user', 'Trần Văn Tùng', 0914567890, '1994-04-14', '14 Đường Nguyễn Văn Linh, Cần Thơ', 'Male', NULL),
-                                                                                                                               (15, 'user15@gmail.com', '123456', 'Lê Thị Thu', 'active', 'user', 'Lê Thị Thu', 0915678901, '1995-05-15', '15 Đường Hai Bà Trưng, Huế', 'Female', NULL),
-                                                                                                                               (16, 'user16@gmail.com', '123456', 'Nguyễn Hoàng Oanh', 'active', 'user', 'Nguyễn Hoàng Oanh', 0916789012, '1996-06-16', '16 Đường Phan Bội Châu, Huế', 'Female', NULL),
-                                                                                                                               (17, 'user17@gmail.com', '123456', 'Phạm Tấn Tài', 'active', 'user', 'Phạm Tấn Tài', 0917890123, '1997-07-17', '17 Đường Đồng Khởi, Biên Hòa', 'Male', NULL),
-                                                                                                                               (18, 'user18@gmail.com', '123456', 'Võ Trọng Nghĩa', 'inactive', 'user', 'Võ Trọng Nghĩa', 0918901234, '1998-08-18', '18 Đường Phạm Văn Thuận, Biên Hòa', 'Male', NULL),
-                                                                                                                               (19, 'user19@gmail.com', '123456', 'Đinh Thị Mỹ Linh', 'active', 'user', 'Đinh Thị Mỹ Linh', 0919012345, '1999-09-19', '19 Đường 30/4, Vũng Tàu', 'Female', NULL),
-                                                                                                                               (20, 'user20@gmail.com', '123456', 'Trịnh Quốc Cường', 'active', 'user', 'Trịnh Quốc Cường', 0920123456, '1990-12-20', '20 Đường Hạ Long, Vũng Tàu', 'Male', NULL),
-                                                                                                                               (21, 'user21@gmail.com', '123456', 'Bùi Thanh Trúc', 'active', 'user', 'Bùi Thanh Trúc', 0921234567, '1991-01-21', '21 Đường Nguyễn Huệ, Quy Nhơn', 'Female', NULL),
-                                                                                                                               (22, 'user22@gmail.com', '123456', 'Lương Tuấn Kiệt', 'active', 'user', 'Lương Tuấn Kiệt', 0922345678, '1992-02-22', '22 Đường Xuân Diệu, Quy Nhơn', 'Male', NULL),
-                                                                                                                               (23, 'user23@gmail.com', '123456', 'Vương Kim Liên', 'active', 'user', 'Vương Kim Liên', 0923456789, '1993-03-23', '23 Đường Quang Trung, Nha Trang', 'Female', NULL);
 
 
 
@@ -60,7 +36,8 @@ create table product(
     original_price numeric(18,3) not null,
     category varchar(255) not null,
     image_link text not null,
-    sub_category varchar(255) not null
+    sub_category varchar(255) not null,
+    is_delete boolean
 
 
 );
@@ -524,6 +501,7 @@ create table orders(
     STATUS VARCHAR(150),
     TOTAL_AMOUNT NUMERIC(19,6),
     ID_USER INT NOT NULL,
+    is_delete boolean,
     FOREIGN KEY (ID_USER) REFERENCES users(ID_USER)
 
 );
@@ -622,10 +600,10 @@ SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu m
 -- TRUNCATE TABLE oders_items;
 -- TRUNCATE TABLE orders;
   TRUNCATE TABLE product;
-# DROP TABLE users;
+ DROP TABLE users;
 -- DROP TABLE carts;
--- DROP TABLE product;
--- DROP TABLE orders;
+ DROP TABLE product;
+DROP TABLE orders;
 --
 -- # SELECT
 -- #     ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Used_MB
@@ -639,13 +617,17 @@ where product.name = N'Sạc dự phòng 10000mAh';
 select * from product
 where product.name = N'Balo thời trang';
 
-DELETE p1
-FROM product p1
-         JOIN product p2
-              ON p1.name = p2.name AND p1.ID_PRODUCT > p2.ID_PRODUCT;
+DELETE p1 FROM Product p1
+                   INNER JOIN Product p2
+WHERE
+    p1.ID_PRODUCT > p2.ID_PRODUCT AND
+    p1.name = p2.name;
 
 select * from mini_mart_dev.product
 where product.name = N'SSD di động 512GB';
 
 select * from mini_mart_dev.product
 where ID_PRODUCT = 1;
+
+Select * FROM product
+WHERE product.is_delete is null or is_delete = false;

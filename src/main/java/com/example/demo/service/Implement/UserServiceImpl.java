@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
         userCreate.setEmail(user.getEmail());
         userCreate.setRole("user"); // Lưu ý: Nên để "user" viết thường cho khớp với hasAuthority("user")
         userCreate.setStatus("Active");
+        userCreate.setIsDelete(false);
 
         userRepository.save(userCreate);
         Cart cart = new Cart();
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ProductResponseDTO> showallproduct() {
-        List<Product> productsOriginal = productRepository.findAll();
+        List<Product> productsOriginal = productRepository.getProductByIsDelete();
         List<ProductResponseDTO> productRes = new ArrayList<>();
         for (Product product : productsOriginal) {
             ProductResponseDTO productResDTO = new ProductResponseDTO();

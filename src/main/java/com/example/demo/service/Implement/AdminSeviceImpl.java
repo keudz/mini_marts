@@ -3,14 +3,17 @@ package com.example.demo.service.Implement;
 import com.example.demo.dto.request.ProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.OrderComparator;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,6 +32,9 @@ public class AdminSeviceImpl implements AdminService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Override
 
@@ -107,19 +113,21 @@ public class AdminSeviceImpl implements AdminService {
 
 
     @Override
-    public Product deleteProduct (int id) {
+    public void deleteProduct (int id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
-            Product product1 = product.get();
-            productRepository.deleteById(id);
-            return product1;
+            Product productTemp = product.get();
+            productTemp.setIsDelete(true);
+            productRepository.save(productTemp);
         }
-        return null;
+        else{
+            throw new ApiException(404, "product not found");
+        }
     }
 
     @Override
     public List<ProductResponseDTO> showAllProduct() {
-        List<Product> productOriginal = productRepository.findAll();
+        List<Product> productOriginal = productRepository.getProductByIsDelete();
         List<ProductResponseDTO> ListProductRespon = new ArrayList<>();
         for(Product product : productOriginal){
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
@@ -134,5 +142,34 @@ public class AdminSeviceImpl implements AdminService {
             ListProductRespon.add(productResponseDTO);
         }
         return ListProductRespon;
+    }
+
+    @Override
+    public void redoProduct(int id) {
+        Product product = productRepository.getProductById(id);
+        product.setIsDelete(false);
+        productRepository.save(product);
+    }
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAll();
+    }
+    @Override
+    public List<Orders> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public void setDeLiveringForOrder(int id) {
+       Orders orders = orderRepository.findByIdOrder(id);
+       orders.setSTATUS("DELIVERING");
+       orderRepository.save(orders);
+    }
+
+    @Override
+    public void setCompletedForOrder(int id) {
+        Orders orders = orderRepository.findByIdOrder(id);
+        orders.setSTATUS("COMPLETED");
+        orderRepository.save(orders);
     }
 }

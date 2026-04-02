@@ -5,6 +5,8 @@ import com.example.demo.dto.request.ProductRequestDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.entity.Orders;
+import com.example.demo.entity.User;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -55,15 +57,15 @@ public class AdminController {
 
     @DeleteMapping(UrlConstant.API_V1_DELETE_PRODUCT)
     @PreAuthorize("hasAuthority('admin')")
-    public Object deleteProduct(@RequestBody int id) {
-        return adminService.deleteProduct(id);
+    public void deleteProduct(@RequestParam int id) {
+         adminService.deleteProduct(id);
     }
 
     @Autowired
     private UserService getUser;
     @PostMapping(UrlConstant.API_V1_GET_USER)
     @PreAuthorize("hasAuthority('admin')")
-    public UserCreateResponseDTO GetUser(@RequestBody int id) {
+    public UserCreateResponseDTO GetUser(@RequestParam int id) {
         return getUser.getUserById(id);
     }
 
@@ -80,6 +82,31 @@ public class AdminController {
     @PreAuthorize("hasAuthority('admin')")
     public List<UserResponDTO>  showAllUsers() {
         return adminService.showAllUser();
+    }
+
+    @PostMapping(UrlConstant.REDO_PRODUCT_FOR_ADMIN)
+    public void redoProductForAdmin(@RequestParam @Valid int id) {
+        adminService.redoProduct(id);
+    }
+    // 1. Lấy danh sách tất cả User
+    @PostMapping(UrlConstant.GET_ALL_USERS_FOR_ADMIN)
+    public List<User> getAllUser() {
+        return adminService.getAllUser();
+    }
+
+    @PostMapping(UrlConstant.GET_ALL_ORDERS_FOR_ADMIN)
+    public List<Orders> getAllOrders() {
+        return adminService.getAllOrders();
+    }
+
+    @PostMapping(UrlConstant.SET_SHIPPING_FOR_ORDER)
+    public void setShippingForOrder(@RequestParam int id) {
+        adminService.setDeLiveringForOrder(id);
+    }
+
+    @PostMapping(UrlConstant.SET_COMPLETED_FOR_ORDER)
+    public void setCompletedForOrder(@RequestParam int id) {
+        adminService.setCompletedForOrder(id);
     }
 
 

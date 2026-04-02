@@ -31,6 +31,9 @@ public class Product {
     @Column(name = "sub_category")
     private String subCategory;
 
+    @Column(name = "is_delete")
+    private Boolean isDelete;
+
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Cart_Iterm> cartItermList;
 //    fetch = FetchType.LAZY(Lười biếng): Khi bạn lấy một Product từ database, Hibernate chưa lấy danh sách cartItermList ngay lập tức. Câu lệnh SQL chỉ lấy dữ liệu của bảng product.

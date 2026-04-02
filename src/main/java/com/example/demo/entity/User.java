@@ -37,6 +37,8 @@ public class User {
     private String sex;
     private String image;
 
+    @Column(name = "is_delete")
+    private Boolean isDelete;
 
 
 
