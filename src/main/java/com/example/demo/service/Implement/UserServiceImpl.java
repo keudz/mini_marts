@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderRequestDTO orderRequestDTO) {
+    public OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderRequestDTO orderRequestDTO){
 
         User userRes = userRepository.selectUserByEmail(orderRequestDTO.getEmail());
         if (userRes == null) {
@@ -205,8 +205,8 @@ public class UserServiceImpl implements UserService {
 
         // 🔥 Lấy Product từ list tên
         List<Product> listProduct = new ArrayList<>();
-        for (String orderRes : orderRequestDTO.getListProduct()) {
-            Product product = productRepository.findByName(orderRes); // tự viết hàm này
+        for (String orderRes : orderRequestDTO.getListProduct()){
+            Product product = productRepository.findByName(orderRes);
             if (product == null) {
                 throw new ApiException(404, "Product not found: " + orderRes);
             }
@@ -244,6 +244,12 @@ public class UserServiceImpl implements UserService {
         for (Cart_Iterm cartItem : selectedItems) {
 
             Order_Iterm orderItem = new Order_Iterm();
+            Product product = cartItem.getProduct();
+            if(product.getStock() < cartItem.getQUANTITY()){
+                throw new ApiException(400, "Product not enough");
+            }
+            product.setStock(product.getStock() - cartItem.getQUANTITY());
+            productRepository.save(product);
 
             orderItem.setProduct(cartItem.getProduct());
 
@@ -257,13 +263,18 @@ public class UserServiceImpl implements UserService {
             totalAmount += orderItem.getPRICE();
 
             orderItemList.add(orderItem);
+
+
+
         }
+
 
 
         order.setOrderItermList(orderItemList);
         order.setTATAL_AMOUNT(totalAmount);
         orderRepository.save(order);
         cartItemRepository.deleteAll(selectedItems);
+
 
         OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
         orderResponceDTO.setTotal_amount(totalAmount);

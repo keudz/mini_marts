@@ -633,7 +633,7 @@ SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu m
 -- # WHERE table_schema = 'shoppingonline';
 
 select * from mini_mart_dev.product
-where product.name = N'Quạt mini USB';
+where product.name = N'Sạc dự phòng 10000mAh';
 
 
 select * from product
