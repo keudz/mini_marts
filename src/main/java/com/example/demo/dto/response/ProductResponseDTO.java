@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 public class ProductResponseDTO {
     private int id;
 
-    private String name;
+    private String nameProduct;
 
-    private String description;
+    private String descriptionProduct;
 
-    private double price;
+    private double priceProduct;
 
-    private int stock;
+    private int quantityProduct;
 
-    private String category;
+    private String categoryProduct;
 
     private String imageLink;
 
-    private String subCategory;
+    private String subCategoryProduct;
 
 }
