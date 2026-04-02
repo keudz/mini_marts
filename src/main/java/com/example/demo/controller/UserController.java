@@ -68,17 +68,12 @@ public class UserController {
          return userDeleteProduct.userDeleteProductInCart(deleteProduct);
      }
 
-     @Autowired
-    private UserService userOrderAllItemInCart;
-     @PostMapping(UrlConstant.USER_ORDER_ALL_ITEM_IN_CART)
-     public  Object useOrderAllItemInCart(@RequestBody EmailRequest email){
-         return userOrderAllItemInCart.useOrderAllItemInCartToOrder(email);
-     }
+
 
      @Autowired
      private UserService useOrderSomeItemInCart;
     @PostMapping(UrlConstant.USER_ORDER_SOME_ITEM_IN_CART)
-    public  Object useOrderAllItemInCart(@RequestBody OrderRequestDTO orderRequestDTO){
+    public  OrderResponceDTO useOrderAllItemInCart(@RequestBody OrderRequestDTO orderRequestDTO){
         return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(orderRequestDTO);
     }
 

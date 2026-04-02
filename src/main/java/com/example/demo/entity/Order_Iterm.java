@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,6 +24,7 @@ public class Order_Iterm {
 
     @ManyToOne
     @JoinColumn(name = "ID_ORDER")
+    @JsonBackReference
     private Orders order;
 
     public Order_Iterm() {

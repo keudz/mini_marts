@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.*;
-import com.example.demo.dto.response.AddProductInCartResponseDTO;
-import com.example.demo.dto.response.ProductResponseDTO;
-import com.example.demo.dto.response.UserCreateResponseDTO;
-import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.dto.response.*;
 
 import java.util.List;
 
@@ -23,9 +20,8 @@ public interface UserService {
 
     String userDeleteProductInCart(DeleteItemFromCartRequestDTO delete);
 
-    Object useOrderAllItemInCartToOrder(EmailRequest email);
 
-    Object useOrderSomeItemFromCartToOrder(OrderRequestDTO  orderRequestDTO);
+    OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderRequestDTO  orderRequestDTO);
 
      void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO);
 

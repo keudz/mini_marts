@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.Order_Iterm;
 import com.example.demo.entity.Product;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,11 @@ public class OrderResponceDTO {
 
    private double total_amount;
 
-   private List<ProductResponseDTO> product;
+   private List<OrderItemListResponceDTO> orderItermList;
+
+
+
+
 
 
 }

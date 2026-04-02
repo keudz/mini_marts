@@ -4,8 +4,10 @@ import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ApiException;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,8 @@ public class UserServiceImpl implements UserService {
     private OrderRepository orderRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private UserMapper userMapper;
 
 
 
@@ -60,9 +63,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponDTO login(UserLoginRequestDTO user) {
-       return userValidateServiceImpl.ValidateCheckLogin(user);
+        return userValidateServiceImpl.ValidateCheckLogin(user);
 
-}
+    }
 
     @Override
     public UserCreateResponseDTO getUserById(int id) {
@@ -178,95 +181,17 @@ public class UserServiceImpl implements UserService {
             throw new ApiException(404,"user not found");
         Cart cart = userRes.getCart();
         if (cart == null || cart.getCartItermList().isEmpty()){
-           throw new ApiException(404,"cart is empty");
+            throw new ApiException(404,"cart is empty");
         }
         userRepository.deleteProductByName(delete.getNameProduct(), cart.getID_CART());
         return "da xoa thanh cong san pham " + delete.getNameProduct() + "ra khoi gio hang!!";
     }
 
+
+
+    @Transactional
     @Override
-    public Object useOrderAllItemInCartToOrder(EmailRequest email) {
-        System.out.println("DEBUG - Email nhan vao: " + email);
-        User userRes = userRepository.selectUserByEmail(email.getEmail());
-        if (userRes == null) {
-            throw new ApiException(404, "User not found");
-        }
-
-        Cart cart = userRes.getCart();
-        if (cart == null || cart.getCartItermList().isEmpty()) {
-            throw new ApiException(400, "Cart is empty");
-        }
-
-        List<Cart_Iterm> cartItemList = cart.getCartItermList();
-
-        OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
-
-        Orders order = new Orders();
-        order.setUser(userRes);
-        order.setSTATUS("PENDING");
-        order.setDESCRIPTION("Order from cart");
-
-        List<Order_Iterm> orderItemList = new ArrayList<>();
-
-        int totalAmount = 0;
-
-        // 2. Convert CartItem -> OrderItem
-        for (Cart_Iterm cartItem : cartItemList) {
-
-            Order_Iterm orderItem = new Order_Iterm();
-
-            orderItem.setProduct(cartItem.getProduct());
-
-            double price = cartItem.getProduct().getPrice(); // giả sử Product có getPrice()
-
-            orderItem.setPRICE(price);
-            orderItem.setPRICE(price * cartItem.getQUANTITY());
-
-            // set quan hệ
-            orderItem.setOrder(order);
-
-            totalAmount += orderItem.getPRICE();
-
-            orderItemList.add(orderItem);
-        }
-
-
-        order.setOrderItermList(orderItemList);
-
-
-        order.setTATAL_AMOUNT(totalAmount);
-
-
-        // 5. save order (cascade sẽ save orderItem)
-        orderRepository.save(order);
-
-        // 6. clear cart
-        cartItemRepository.deleteAllByCartId(cart.getID_CART());
-
-
-
-        List<ProductResponseDTO> productList = new ArrayList<>();
-        for( Order_Iterm orderIterm : order.getOrderItermList()) {
-            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-
-            productResponseDTO.setId(orderIterm.getProduct().getID_PRODUCT());
-            productResponseDTO.setPriceProduct(orderIterm.getProduct().getPrice());
-            productResponseDTO.setDescriptionProduct(orderIterm.getProduct().getDescription());
-            productResponseDTO.setCategoryProduct(orderIterm.getProduct().getCategory());
-            productResponseDTO.setImageLink(orderIterm.getProduct().getImagelink());
-            productResponseDTO.setNameProduct(orderIterm.getProduct().getName());
-            productList.add(productResponseDTO);
-        }
-        orderResponceDTO.setDes(order.getDESCRIPTION());
-        orderResponceDTO.setStatus(order.getSTATUS());
-        orderResponceDTO.setTotal_amount(order.getTATAL_AMOUNT());
-        orderResponceDTO.setProduct(productList);
-        return orderResponceDTO;
-    }
-
-
-    @Override
-    public Object useOrderSomeItemFromCartToOrder(OrderRequestDTO orderRequestDTO) {
+    public OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderRequestDTO orderRequestDTO) {
 
         User userRes = userRepository.selectUserByEmail(orderRequestDTO.getEmail());
         if (userRes == null) {
@@ -280,10 +205,10 @@ public class UserServiceImpl implements UserService {
 
         // 🔥 Lấy Product từ list tên
         List<Product> listProduct = new ArrayList<>();
-        for (String name : orderRequestDTO.getListProduct()) {
-            Product product = productRepository.findByName(name); // tự viết hàm này
+        for (String orderRes : orderRequestDTO.getListProduct()) {
+            Product product = productRepository.findByName(orderRes); // tự viết hàm này
             if (product == null) {
-                throw new ApiException(404, "Product not found: " + name);
+                throw new ApiException(404, "Product not found: " + orderRes);
             }
             listProduct.add(product);
         }
@@ -334,47 +259,43 @@ public class UserServiceImpl implements UserService {
             orderItemList.add(orderItem);
         }
 
-        // 3. Gán list
+
         order.setOrderItermList(orderItemList);
-
-        // 4. Tổng tiền
         order.setTATAL_AMOUNT(totalAmount);
-
-        // 5. Lưu
         orderRepository.save(order);
-
-        // 6. Xóa những item đã order khỏi ca
-//       Sau đó mới xóa dưới DB
         cartItemRepository.deleteAll(selectedItems);
 
+        OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
+        orderResponceDTO.setTotal_amount(totalAmount);
+        orderResponceDTO.setDes(order.getDESCRIPTION());
+        orderResponceDTO.setStatus(order.getSTATUS());
+        List<OrderItemListResponceDTO> orderListTemp  = new ArrayList<>();
+        for(Cart_Iterm cartItem : selectedItems){
+            OrderItemListResponceDTO orderListRes = new OrderItemListResponceDTO();
+            orderListRes.setNameProduct(cartItem.getProduct().getName());
+            orderListRes.setQuantity(cartItem.getQUANTITY());
+            orderListRes.setPrice(cartItem.getProduct().getPrice());
+            orderListTemp.add(orderListRes);
+        }
+        orderResponceDTO.setOrderItermList(orderListTemp);
 
-        return order;
+
+        return orderResponceDTO;
     }
 
     @Override
     public void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO){
-    User useRes = userRepository.selectUserByEmail(addInforUserRequestDTO.getEmail());
-    if(useRes == null){
-        throw new ApiException(404, "User not found");
+        User useRes = userRepository.selectUserByEmail(addInforUserRequestDTO.getEmail());
+        if(useRes == null){
+            throw new ApiException(404, "User not found");
+        }
+        useRes.setRealName(addInforUserRequestDTO.getRealName());
+        useRes.setNumberPhone(addInforUserRequestDTO.getNumberPhone());
+        useRes.setAddress(addInforUserRequestDTO.getAddress());
+        useRes.setImage(addInforUserRequestDTO.getImage());
+        useRes.setSex(addInforUserRequestDTO.getSex());
+        useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
+        userRepository.save(useRes);
     }
-    useRes.setRealName(addInforUserRequestDTO.getRealName());
-    useRes.setNumberPhone(addInforUserRequestDTO.getNumberPhone());
-    useRes.setAddress(addInforUserRequestDTO.getAddress());
-    useRes.setImage(addInforUserRequestDTO.getImage());
-    useRes.setSex(addInforUserRequestDTO.getSex());
-    useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
-    userRepository.save(useRes);
-  }
 
 }
-
-
-
-
-
-
-
-
-
-
-
