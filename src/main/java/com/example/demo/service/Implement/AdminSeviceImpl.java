@@ -124,13 +124,13 @@ public class AdminSeviceImpl implements AdminService {
         for(Product product : productOriginal){
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setId(product.getID_PRODUCT());
-            productResponseDTO.setName(product.getName());
-            productResponseDTO.setPrice(product.getPrice());
-            productResponseDTO.setStock(product.getStock());
-            productResponseDTO.setDescription(product.getDescription());
-            productResponseDTO.setCategory(product.getCategory());
+            productResponseDTO.setNameProduct(product.getName());
+            productResponseDTO.setPriceProduct(product.getPrice());
+            productResponseDTO.setQuantityProduct(product.getStock());
+            productResponseDTO.setDescriptionProduct(product.getDescription());
+            productResponseDTO.setCategoryProduct(product.getCategory());
             productResponseDTO.setImageLink(product.getImagelink());
-            productResponseDTO.setSubCategory(product.getSubCategory());
+            productResponseDTO.setSubCategoryProduct(product.getSubCategory());
             ListProductRespon.add(productResponseDTO);
         }
         return ListProductRespon;

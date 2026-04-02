@@ -79,13 +79,13 @@ public class UserServiceImpl implements UserService {
         for (Product product : productsOriginal) {
             ProductResponseDTO productResDTO = new ProductResponseDTO();
             productResDTO.setId(product.getID_PRODUCT());
-            productResDTO.setName(product.getName());
-            productResDTO.setPrice(product.getPrice());
-            productResDTO.setStock(product.getStock());
-            productResDTO.setCategory(product.getCategory());
-            productResDTO.setDescription(product.getDescription());
+            productResDTO.setNameProduct(product.getName());
+            productResDTO.setPriceProduct(product.getPrice());
+            productResDTO.setQuantityProduct(product.getStock());
+            productResDTO.setCategoryProduct(product.getCategory());
+            productResDTO.setDescriptionProduct(product.getDescription());
             productResDTO.setImageLink(product.getImagelink());
-            productResDTO.setSubCategory(product.getSubCategory());
+            productResDTO.setSubCategoryProduct(product.getSubCategory());
             productRes.add(productResDTO);
         }
         return productRes;
@@ -151,13 +151,13 @@ public class UserServiceImpl implements UserService {
         for (Cart_Iterm cart_iterm : cart_ItermList) {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setId(i++);
-            productResponseDTO.setName(cart_iterm.getProduct().getName());
-            productResponseDTO.setDescription(cart_iterm.getProduct().getDescription());
-            productResponseDTO.setPrice(cart_iterm.getProduct().getPrice());
-            productResponseDTO.setCategory(cart_iterm.getProduct().getCategory());
-            productResponseDTO.setStock(cart_iterm.getQUANTITY());
+            productResponseDTO.setNameProduct(cart_iterm.getProduct().getName());
+            productResponseDTO.setDescriptionProduct(cart_iterm.getProduct().getDescription());
+            productResponseDTO.setPriceProduct(cart_iterm.getProduct().getPrice());
+            productResponseDTO.setCategoryProduct(cart_iterm.getProduct().getCategory());
+            productResponseDTO.setQuantityProduct(cart_iterm.getQUANTITY());
             productResponseDTO.setImageLink(cart_iterm.getProduct().getImagelink());
-            productResponseDTO.setSubCategory(cart_iterm.getProduct().getSubCategory());
+            productResponseDTO.setSubCategoryProduct(cart_iterm.getProduct().getSubCategory());
             productResponseDTOList.add(productResponseDTO);
         }
         return productResponseDTOList;
@@ -242,11 +242,11 @@ public class UserServiceImpl implements UserService {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 
             productResponseDTO.setId(orderIterm.getProduct().getID_PRODUCT());
-            productResponseDTO.setPrice(orderIterm.getProduct().getPrice());
-            productResponseDTO.setDescription(orderIterm.getProduct().getDescription());
-            productResponseDTO.setCategory(orderIterm.getProduct().getCategory());
+            productResponseDTO.setPriceProduct(orderIterm.getProduct().getPrice());
+            productResponseDTO.setDescriptionProduct(orderIterm.getProduct().getDescription());
+            productResponseDTO.setCategoryProduct(orderIterm.getProduct().getCategory());
             productResponseDTO.setImageLink(orderIterm.getProduct().getImagelink());
-            productResponseDTO.setName(orderIterm.getProduct().getName());
+            productResponseDTO.setNameProduct(orderIterm.getProduct().getName());
             productList.add(productResponseDTO);
         }
         orderResponceDTO.setDes(order.getDESCRIPTION());
