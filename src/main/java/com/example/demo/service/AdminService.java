@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Orders;
@@ -28,7 +29,7 @@ public interface AdminService {
 
     List<User> getAllUser();
 
-    List<Orders> getAllOrders();
+    List<OrderResponceDTO> getAllOrders();
 
     void setDeLiveringForOrder(int id);
 

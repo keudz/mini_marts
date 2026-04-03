@@ -1,16 +1,20 @@
 package com.example.demo.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddInforUserRequestDTO {
     private String email;
 
     private String realName;
 
-    private BigInteger numberPhone;
+    private String numberPhone;
 
     private String address;
 
@@ -20,14 +24,6 @@ public class AddInforUserRequestDTO {
 
     private String image;
 
-    public AddInforUserRequestDTO() {
-    }
 
-    public AddInforUserRequestDTO(String realName, String address, BigInteger numberPhone, String sex, LocalDate birthDay) {
-        this.realName = realName;
-        this.address = address;
-        this.numberPhone = numberPhone;
-        this.sex = sex;
-        this.birthDay = birthDay;
-    }
+
 }

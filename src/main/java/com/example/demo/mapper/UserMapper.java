@@ -16,8 +16,11 @@ import java.time.LocalDate;
 public interface UserMapper {
    UserResponDTO userToUserResponDTO(User user);
 
-  @Mapping(source = "DESCRIPTION" ,target = "des")
-  @Mapping(source = "TATAL_AMOUNT", target = "total_amount")
-  @Mapping(source = "STATUS", target = "status")
-  OrderResponceDTO orderToOrderResponceDTO(Orders order);
+//  @Mapping(source = "DESCRIPTION" ,target = "des")
+//  @Mapping(source = "TOTAL_AMOUNT", target = "total_amount")
+//  @Mapping(source = "STATUS", target = "status")
+//  @Mapping(source = "ID_USER", target = "idUser")
+//  @Mapping(source = "ID_ORDER",target = "idOrder" )
+//  OrderResponceDTO orderToOrderResponceDTO(Orders order);
+
 }

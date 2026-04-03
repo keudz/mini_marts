@@ -1,6 +1,7 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Orders;
@@ -154,9 +155,21 @@ public class AdminSeviceImpl implements AdminService {
     public List<User> getAllUser() {
         return userRepository.findAll();
     }
+
     @Override
-    public List<Orders> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderResponceDTO> getAllOrders() {
+        List<Orders> ordersList = orderRepository.findAll();
+        List<OrderResponceDTO> orderResponceDTOList = new ArrayList<>();
+        for(Orders order : ordersList){
+            OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
+            orderResponceDTO.setIdOrder(order.getID_ORDER());
+            orderResponceDTO.setDes(order.getDESCRIPTION());
+            orderResponceDTO.setStatus(order.getSTATUS());
+            orderResponceDTO.setTotal_amount(order.getTOTAL_AMOUNT());
+            orderResponceDTO.setIdUser(order.getIdUser());
+            orderResponceDTOList.add(orderResponceDTO);
+        }
+        return orderResponceDTOList;
     }
 
     @Override

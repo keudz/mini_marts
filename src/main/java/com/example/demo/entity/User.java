@@ -29,7 +29,7 @@ public class User {
     private String address;
 
     @Column(name = "number_phone")
-    private BigInteger numberPhone;
+    private String numberPhone;
 
     @Column(name = "birth_day")
     private LocalDate birthDay;

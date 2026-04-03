@@ -1,11 +1,15 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "orders")
 public class Orders {
 
@@ -17,9 +21,9 @@ public class Orders {
 
     private String STATUS;
 
-    private double TATAL_AMOUNT;
-
-    private int USER_ID;
+    private double TOTAL_AMOUNT;
+    @Column(name = "id_user", insertable = false, updatable = false)
+    private int idUser;
 
     @Column(name =  "is_delete")
     private Boolean isDelete;
@@ -30,15 +34,6 @@ public class Orders {
     @JoinColumn(name = "ID_USER")
     private User user;
 
-    public Orders() {
-    }
 
-    public Orders(int ID_ORDER, String DESCRIPTION, String STATUS, int USER_ID, double TATAL_AMOUNT) {
-        this.ID_ORDER = ID_ORDER;
-        this.DESCRIPTION = DESCRIPTION;
-        this.STATUS = STATUS;
-        this.USER_ID = USER_ID;
-        this.TATAL_AMOUNT = TATAL_AMOUNT;
-    }
 
 }

@@ -15,7 +15,7 @@ CREATE TABLE users (
                        status VARCHAR(50) NOT NULL,
                        role VARCHAR(50) NOT NULL,
                        real_name VARCHAR(50),
-                       number_phone BIGINT,
+                       number_phone varchar(20),
                        birth_day DATE,
                        address VARCHAR(100),
                        sex VARCHAR(10),
@@ -500,7 +500,7 @@ create table orders(
     DESCRIPTION VARCHAR(150),
     STATUS VARCHAR(150),
     TOTAL_AMOUNT NUMERIC(19,6),
-    ID_USER INT NOT NULL,
+    id_user INT NOT NULL,
     is_delete boolean,
     FOREIGN KEY (ID_USER) REFERENCES users(ID_USER)
 

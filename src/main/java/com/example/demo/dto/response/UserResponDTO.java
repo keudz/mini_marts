@@ -25,7 +25,7 @@ public class UserResponDTO {
 
     private String address;
 
-    private BigInteger numberPhone;
+    private String numberPhone;
 
     private LocalDate birthDay;
 

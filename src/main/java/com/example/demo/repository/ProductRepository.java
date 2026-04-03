@@ -19,8 +19,8 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     @Transactional
     @Modifying//phương thức có có anocation chỉ đc trả về int or void
-    @Query(value = "INSERT INTO User (name,price,category,original_price,stock) values (:name,:price,:category,:original_price,:stock)",nativeQuery = true)
-    int inSertProduct(@Param("name") String name, @Param("price") double price, @Param("category") String category, @Param("original_price") double original_price, @Param("stock") int stock);
+//    @Query(value = "INSERT INTO User (name,price,category,original_price,stock) values (:name,:price,:category,:original_price,:stock)",nativeQuery = true)
+//    int inSertProduct(@Param("name") String name, @Param("price") double price, @Param("category") String category, @Param("original_price") double original_price, @Param("stock") int stock);
 
     //đây là câu truy vấn lấy tat cả product k kể isDelete
     @Query(value = "SELECT p FROM  Product p where p.ID_PRODUCT = :id")

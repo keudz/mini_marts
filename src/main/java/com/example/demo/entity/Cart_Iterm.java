@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "cart_items")
 public class Cart_Iterm {
@@ -68,13 +70,24 @@ public class Cart_Iterm {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        // 1. Kiểm tra cùng địa chỉ
+        if (this == o) return true;
+
+        // 2. Kiểm tra null và kiểu lớp
+        if (o == null || getClass() != o.getClass()) return false;
+
+        // 3. Ép kiểu
         Cart_Iterm that = (Cart_Iterm) o;
-        if(that.getProduct().getName() == this.getProduct().getName()){
-            return true;
-        }
-        return false;
+
+        // 4. So sánh giá trị (Sử dụng Objects.equals để chống lỗi Null)
+        // Giả sử hai item bằng nhau nếu tên sản phẩm giống nhau
+        return Objects.equals(this.getProduct().getName(), that.getProduct().getName());
+    }
+
+    @Override
+    public int hashCode() {
+        // Phải ghi đè hashCode đi kèm với equals
+        return Objects.hash(getProduct().getName());
     }
 
 }

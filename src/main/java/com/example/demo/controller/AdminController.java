@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.constant.UrlConstant;
 import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserCreateResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
@@ -96,7 +97,7 @@ public class AdminController {
     }
 
     @PostMapping(UrlConstant.GET_ALL_ORDERS_FOR_ADMIN)
-    public List<Orders> getAllOrders() {
+    public List<OrderResponceDTO> getAllOrders() {
         return adminService.getAllOrders();
     }
 
