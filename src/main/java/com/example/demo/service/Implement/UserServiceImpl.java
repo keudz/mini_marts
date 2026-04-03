@@ -274,7 +274,7 @@ public class UserServiceImpl implements UserService {
         order.setOrderItermList(orderItemList);
         order.setTATAL_AMOUNT(totalAmount);
         orderRepository.save(order);
-        cartItemRepository.deleteAll(selectedItems);
+        cart.getCartItermList().removeAll(selectedItems);
 
 
         OrderResponceDTO orderResponceDTO = new OrderResponceDTO();

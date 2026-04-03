@@ -84,14 +84,15 @@ public class AdminController {
         return adminService.showAllUser();
     }
 
+
+    // 1. Lấy danh sách tất cả User
+//    @PostMapping(UrlConstant.GET_ALL_USERS_FOR_ADMIN)
+//    public List<User> getAllUser() {
+//        return adminService.getAllUser();
+//    }
     @PostMapping(UrlConstant.REDO_PRODUCT_FOR_ADMIN)
     public void redoProductForAdmin(@RequestParam @Valid int id) {
         adminService.redoProduct(id);
-    }
-    // 1. Lấy danh sách tất cả User
-    @PostMapping(UrlConstant.GET_ALL_USERS_FOR_ADMIN)
-    public List<User> getAllUser() {
-        return adminService.getAllUser();
     }
 
     @PostMapping(UrlConstant.GET_ALL_ORDERS_FOR_ADMIN)
