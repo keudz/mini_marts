@@ -147,9 +147,15 @@ public class AdminSeviceImpl implements AdminService {
 
     @Override
     public void redoProduct(int id) {
-        Product product = productRepository.getProductById(id);
-        product.setIsDelete(false);
-        productRepository.save(product);
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            Product productTemp = product.get();
+            productTemp.setIsDelete(false);
+            productRepository.save(productTemp);
+        }
+        else {
+            throw new ApiException(404, "product not found");
+        }
     }
     @Override
     public List<User> getAllUser() {

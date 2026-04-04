@@ -23,8 +23,8 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 //    int inSertProduct(@Param("name") String name, @Param("price") double price, @Param("category") String category, @Param("original_price") double original_price, @Param("stock") int stock);
 
     //đây là câu truy vấn lấy tat cả product k kể isDelete
-    @Query(value = "SELECT p FROM  Product p where p.ID_PRODUCT = :id")
-    Product getProductById(@Param("id") int id);
+//    @Query(value = "SELECT p FROM  Product p where p.ID_PRODUCT = :id")
+//    Product getProductById(@Param("id") int id);
 
     @Query(value = "SELECT p FROM Product p where p.isDelete = false or p.isDelete is null")
     List<Product> getProductByIsDelete();
