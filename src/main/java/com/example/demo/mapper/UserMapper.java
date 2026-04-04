@@ -2,8 +2,10 @@ package com.example.demo.mapper;
 
 
 import com.example.demo.dto.response.OrderResponceDTO;
+import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
 import com.example.demo.entity.Orders;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,4 +25,13 @@ public interface UserMapper {
 //  @Mapping(source = "ID_ORDER",target = "idOrder" )
 //  OrderResponceDTO orderToOrderResponceDTO(Orders order);
 
+   @Mapping(source = "ID_PRODUCT", target = "id")
+   @Mapping(source = "name", target = "nameProduct")
+   @Mapping(source = "description", target = "descriptionProduct")
+   @Mapping(source = "price", target = "priceProduct")
+   @Mapping(source = "stock", target = "quantityProduct")
+   @Mapping(source = "category", target = "categoryProduct")
+   @Mapping(source = "imagelink", target = "imageLink")
+   @Mapping(source = "subCategory", target = "subCategoryProduct")
+    ProductResponseDTO productToProductResponseDTO(Product product);
 }

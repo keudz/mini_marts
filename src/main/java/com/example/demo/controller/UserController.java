@@ -84,4 +84,9 @@ public class UserController {
          addInforUser.addInforUser(addInforUserRequestDTO);
     }
 
+    @PostMapping(UrlConstant.USER_ORDER)
+    public OrderResponceDTO userOrderItem(@Valid @RequestBody OrderRequestDTO orderRequestDTO) {
+        return userSevice.useOrderItem(orderRequestDTO);
+    }
+
 }

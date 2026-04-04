@@ -26,6 +26,8 @@ public interface UserService {
 
      void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO);
 
+     OrderResponceDTO useOrderItem(OrderRequestDTO  orderRequestDTO);
+
 
 
 

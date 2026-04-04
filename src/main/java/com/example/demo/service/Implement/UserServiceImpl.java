@@ -240,9 +240,9 @@ public class UserServiceImpl implements UserService {
 
         List<Order_Iterm> orderItemList = new ArrayList<>();
         int totalAmount = 0;
-
         // 2. Convert sang OrderItem
         for (Cart_Iterm cartItem : selectedItems) {
+
 
             Order_Iterm orderItem = new Order_Iterm();
             Product product = cartItem.getProduct();
@@ -308,6 +308,55 @@ public class UserServiceImpl implements UserService {
         useRes.setSex(addInforUserRequestDTO.getSex());
         useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
         userRepository.save(useRes);
+    }
+    @Transactional
+    @Override
+    public OrderResponceDTO useOrderItem(OrderRequestDTO  orderRequestDTO){
+        User useRes = userRepository.selectUserByEmail(orderRequestDTO.getEmail());
+        Orders orders = new Orders();
+        List<Order_Iterm> orderItermList  = new ArrayList<>();
+        Order_Iterm orderItem = new Order_Iterm();
+        orders.setUser(useRes);
+        if(useRes == null){
+            throw new ApiException(404, "User not found");
+        }
+        Product productRes = new Product();
+       List<OrderItemListResponceDTO> orderItemListRes  = new   ArrayList<>();
+       OrderItemListResponceDTO  orderListRes = new OrderItemListResponceDTO();
+        for(String name : orderRequestDTO.getListProduct()){
+            if(name.isEmpty()){
+                break;
+            }
+            productRes = productRepository.findByName(name);
+        }
+        if(productRes.getStock() < orderRequestDTO.getQuantity()){
+            throw new ApiException(400, "Product not enough");
+        }
+        orderItem.setProduct(productRes);
+        orderItem.setOrder(orders);
+        orderItermList.add(orderItem);
+        orders.setDESCRIPTION("Order selected items");
+        orders.setSTATUS("PENDING");
+        orders.setTOTAL_AMOUNT(productRes.getPrice() * orderRequestDTO.getQuantity());
+        orders.setOrderItermList(orderItermList);
+        OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
+        orderResponceDTO.setIdUser(useRes.getIdUser());
+        orderResponceDTO.setDes(orders.getDESCRIPTION());
+
+        //
+        orderListRes.setNameProduct(productRes.getName());
+        orderListRes.setQuantity(orderRequestDTO.getQuantity());
+        orderListRes.setPrice(productRes.getPrice());
+        orderItemListRes.add(orderListRes);
+        orderResponceDTO.setOrderItermList(orderItemListRes);
+        orderResponceDTO.setTotal_amount(orders.getTOTAL_AMOUNT());
+        orderResponceDTO.setIdOrder(orders.getID_ORDER());
+        orderResponceDTO.setStatus(orders.getSTATUS());
+        productRes.setStock(productRes.getStock() - orderRequestDTO.getQuantity());
+
+        productRepository.save(productRes);
+        orderRepository.save(orders);
+        return orderResponceDTO;
     }
 
 }

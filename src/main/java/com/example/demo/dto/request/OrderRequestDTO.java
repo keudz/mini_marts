@@ -11,6 +11,7 @@ import java.util.List;
 public class OrderRequestDTO {
     private String email;
     private List<String> listProduct;
+    private int quantity;
 
 
 }
