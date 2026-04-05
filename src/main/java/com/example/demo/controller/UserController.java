@@ -73,8 +73,8 @@ public class UserController {
      @Autowired
      private UserService useOrderSomeItemInCart;
     @PostMapping(UrlConstant.USER_ORDER_SOME_ITEM_IN_CART)
-    public  OrderResponceDTO useOrderAllItemInCart(@RequestBody OrderRequestDTO orderRequestDTO){
-        return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(orderRequestDTO);
+    public  OrderResponceDTO useOrderAllItemInCart(@RequestBody OrderCartRequestDTO request){
+        return useOrderSomeItemInCart.useOrderSomeItemFromCartToOrder(request);
     }
 
     @Autowired

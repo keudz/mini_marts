@@ -162,51 +162,64 @@ public class AdminSeviceImpl implements AdminService {
     @Override
     public List<OrderResponceDTO> getAllOrders() {
         List<Orders> ordersList = orderRepository.findAll();
-        List<OrderResponceDTO> orderResponceDTOList = new ArrayList<>();
+        List<OrderResponceDTO> responseList = new ArrayList<>();
+
         for (Orders order : ordersList) {
-            OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
-            orderResponceDTO.setIdOrder(order.getID_ORDER());
-            orderResponceDTO.setDes(order.getDESCRIPTION());
-            orderResponceDTO.setStatus(order.getSTATUS());
-            orderResponceDTO.setTotal_amount(order.getTOTAL_AMOUNT());
+            OrderResponceDTO dto = new OrderResponceDTO();
+            dto.setIdOrder(order.getID_ORDER());
+            dto.setDes(order.getDESCRIPTION());
+            dto.setStatus(order.getSTATUS());
+            dto.setTotal_amount(order.getTOTAL_AMOUNT());
+
+            // Xử lý thông tin User an toàn, tránh NullPointerException
             if (order.getUser() != null) {
-                orderResponceDTO.setIdUser(order.getUser().getIdUser());
-                orderResponceDTO.setUserEmail(order.getUser().getEmail());
-                orderResponceDTO.setUserPhone(order.getUser().getNumberPhone());
-            } else {
-                orderResponceDTO.setIdUser(order.getIdUser());
+                dto.setIdUser(order.getUser().getIdUser());
+                dto.setUserEmail(order.getUser().getEmail());
+                dto.setUserPhone(order.getUser().getNumberPhone());
             }
 
-            List<OrderItemListResponceDTO> orderItemListRes = new ArrayList<>();
+            // Xử lý danh sách Order Items
+            List<OrderItemListResponceDTO> itemDTOs = new ArrayList<>();
             if (order.getOrderItermList() != null) {
-                for (Order_Iterm orderItem : order.getOrderItermList()) {
-                    OrderItemListResponceDTO itemDTO = new OrderItemListResponceDTO();
-                    if (orderItem.getProduct() != null) {
-                        itemDTO.setProductId(orderItem.getProduct().getID_PRODUCT());
-                        itemDTO.setNameProduct(orderItem.getProduct().getName());
-                        int quantity = orderItem.getQUANTITY();
-                        if (quantity == 0) {
-                            if (orderItem.getORIGINAL_PRICE() > 0) {
-                                quantity = (int) Math.round(orderItem.getPRICE() / orderItem.getORIGINAL_PRICE());
-                            } else if (orderItem.getProduct().getPrice() > 0 && order.getTOTAL_AMOUNT() > 0) {
-                                quantity = (int) Math.round(order.getTOTAL_AMOUNT() / orderItem.getProduct().getPrice());
-                            }
-                        }
-                        itemDTO.setQuantity(quantity);
-                        itemDTO.setPrice(orderItem.getProduct().getPrice());
-                        itemDTO.setStock(orderItem.getProduct().getStock());
-                        itemDTO.setCategory(orderItem.getProduct().getCategory());
-                        itemDTO.setDescription(orderItem.getProduct().getDescription());
-                        itemDTO.setImagelink(orderItem.getProduct().getImagelink());
-                    }
-                    orderItemListRes.add(itemDTO);
+                for (Order_Iterm item : order.getOrderItermList()) {
+                    itemDTOs.add(mapToItemDTO(item, order));
                 }
             }
-            orderResponceDTO.setOrderItermList(orderItemListRes);
+            dto.setOrderItermList(itemDTOs);
 
-            orderResponceDTOList.add(orderResponceDTO);
+            responseList.add(dto);
         }
-        return orderResponceDTOList;
+        return responseList;
+    }
+
+    // Hàm Helper tách riêng để map dữ liệu và xử lý logic tính toán Quantity
+    private OrderItemListResponceDTO mapToItemDTO(Order_Iterm orderItem, Orders order) {
+        OrderItemListResponceDTO itemDTO = new OrderItemListResponceDTO();
+
+        if (orderItem.getProduct() != null) {
+            Product product = orderItem.getProduct();
+
+            itemDTO.setProductId(product.getID_PRODUCT());
+            itemDTO.setNameProduct(product.getName());
+            itemDTO.setPrice(product.getPrice());
+            itemDTO.setStock(product.getStock());
+            itemDTO.setCategory(product.getCategory());
+            itemDTO.setDescription(product.getDescription());
+            itemDTO.setImagelink(product.getImagelink());
+
+            // Logic tự động khôi phục số lượng (Quantity Recovery) nếu bị bằng 0
+            int quantity = orderItem.getQUANTITY();
+            if (quantity == 0) {
+                if (orderItem.getORIGINAL_PRICE() > 0) {
+                    quantity = (int) Math.round(orderItem.getPRICE() / orderItem.getORIGINAL_PRICE());
+                } else if (product.getPrice() > 0 && order.getTOTAL_AMOUNT() > 0) {
+                    quantity = (int) Math.round(order.getTOTAL_AMOUNT() / product.getPrice());
+                }
+            }
+            itemDTO.setQuantity(quantity);
+        }
+
+        return itemDTO;
     }
 
     @Override

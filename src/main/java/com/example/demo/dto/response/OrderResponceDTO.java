@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderResponceDTO {
+   @JsonInclude(JsonInclude.Include.NON_NULL)
    private int idOrder;
 
    private String des;

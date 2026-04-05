@@ -7,6 +7,8 @@ import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.OrderRequestDTO;
 import com.example.demo.dto.request.UserCreateRequestDTO;
 import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.request.OrderCartRequestDTO;
+import com.example.demo.dto.request.CartItemDTO;
 import com.example.demo.dto.response.AddProductInCartResponseDTO;
 import com.example.demo.dto.response.OrderItemListResponceDTO;
 import com.example.demo.dto.response.OrderResponceDTO;
@@ -26,8 +28,9 @@ import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.service.UserService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserValidateServiceImpl userValidateServiceImpl;
@@ -49,6 +53,8 @@ public class UserServiceImpl implements UserService {
     private CartItemRepository cartItemRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -210,114 +216,89 @@ public class UserServiceImpl implements UserService {
 
 
 
-    @Transactional
     @Override
-    public OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderRequestDTO orderRequestDTO){
-
-        User userRes = userRepository.selectUserByEmail(orderRequestDTO.getEmail());
+    public OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderCartRequestDTO request) {
+        // Tìm User theo email
+        User userRes = userRepository.selectUserByEmail(request.getEmail());
         if (userRes == null) {
             throw new ApiException(404, "User not found");
         }
 
-        Cart cart = userRes.getCart();
-        if (cart == null || cart.getCartItermList().isEmpty()) {
-            throw new ApiException(400, "Cart is empty");
-        }
-
-        // 🔥 Lấy Product từ list tên
-        List<Product> listProduct = new ArrayList<>();
-        if (orderRequestDTO.getProductName() != null && !orderRequestDTO.getProductName().isEmpty()) {
-            Product product = productRepository.findByName(orderRequestDTO.getProductName());
-            if (product == null) {
-                throw new ApiException(404, "Product not found: " + orderRequestDTO.getProductName());
-            }
-            listProduct.add(product);
-        }
-
-        List<Cart_Iterm> cartItemList = cart.getCartItermList();
-
-        // Lọc những cartItem có product nằm trong listProduct
-        List<Cart_Iterm> selectedItems = new ArrayList<>();
-
-        for (Cart_Iterm cartItem : cartItemList) {
-            for (Product p : listProduct) {
-                if (cartItem.getProduct().getID_PRODUCT() == p.getID_PRODUCT()) {
-                    selectedItems.add(cartItem);
-                    break;
-                }
-            }
-        }
-
-        if (selectedItems.isEmpty()) {
-            throw new ApiException(400, "No matching products in cart");
-        }
-
-        // 1. Tạo order
+        // Khởi tạo 1 đối tượng Orders duy nhất
         Orders order = new Orders();
         order.setUser(userRes);
         order.setSTATUS("PENDING");
-        order.setDESCRIPTION("Order selected items");
+        order.setDESCRIPTION("Order items directly from cart");
+        order.setIsDelete(false);
 
-        List<Order_Iterm> orderItemList = new ArrayList<>();
+        // Lưu trước để lấy ID (Manual Save phụ trợ hoặc để Cascade bám đúng FK)
+        order = orderRepository.save(order);
+
         int totalAmount = 0;
-        // 2. Convert sang OrderItem
-        for (Cart_Iterm cartItem : selectedItems) {
+        List<OrderItemListResponceDTO> orderListTemp = new ArrayList<>();
 
-
-            Order_Iterm orderItem = new Order_Iterm();
-            Product product = cartItem.getProduct();
-            if(product.getStock() < cartItem.getQUANTITY()){
-                throw new ApiException(400, "Product not enough");
+        // Duyệt qua request items
+        for (CartItemDTO cartItem : request.getItems()) {
+            // Tìm Product
+            Product product = productRepository.findByName(cartItem.getProductName());
+            if (product == null) {
+                throw new ApiException(404, "Product not found: " + cartItem.getProductName());
             }
-            product.setStock(product.getStock() - cartItem.getQUANTITY());
+
+            // Kiểm tra tồn kho
+            if (product.getStock() < cartItem.getQuantity()) {
+                throw new ApiException(400, "Product not enough in stock: " + product.getName());
+            }
+
+            // Trừ kho Product
+            product.setStock(product.getStock() - cartItem.getQuantity());
             productRepository.save(product);
 
-            orderItem.setProduct(cartItem.getProduct());
+            // Tạo Order_Iterm
+            Order_Iterm orderItem = new Order_Iterm();
+            orderItem.setProduct(product);
+            orderItem.setORIGINAL_PRICE(product.getOriginalPrice());
+            orderItem.setPRICE(product.getPrice());
+            orderItem.setQUANTITY(cartItem.getQuantity());
 
-            double price = cartItem.getProduct().getPrice();
-            double originalPrice = cartItem.getProduct().getOriginalPrice();
-
-            orderItem.setORIGINAL_PRICE(originalPrice);
-            orderItem.setPRICE(price);
-            orderItem.setQUANTITY(cartItem.getQUANTITY());
-
+            // Thiết lập MQH với Orders
             orderItem.setOrder(order);
+            
+            // Xóa bớt rủi ro Silent Failure: Manual Save thêm nếu cần
+            orderItem = orderItemRepository.save(orderItem);
 
-            totalAmount += price * cartItem.getQUANTITY();
+            order.getOrderItermList().add(orderItem);
 
-            orderItemList.add(orderItem);
+            // Cộng dồn
+            totalAmount += product.getPrice() * cartItem.getQuantity();
 
-
-
+            // Chuẩn bị Response DTO cho item
+            OrderItemListResponceDTO itemResDTO = new OrderItemListResponceDTO();
+            itemResDTO.setProductId(product.getID_PRODUCT());
+            itemResDTO.setNameProduct(product.getName());
+            itemResDTO.setQuantity(cartItem.getQuantity());
+            itemResDTO.setPrice(product.getPrice());
+            itemResDTO.setStock(product.getStock());
+            itemResDTO.setCategory(product.getCategory());
+            itemResDTO.setDescription(product.getDescription());
+            itemResDTO.setImagelink(product.getImagelink());
+            orderListTemp.add(itemResDTO);
         }
 
-
-
-        order.setOrderItermList(orderItemList);
+        // Lưu tổng tiền
         order.setTOTAL_AMOUNT(totalAmount);
+        
+        // Lưu orderRepository.save(orders) => (Cập nhật cập nhật tổng tiền Cascade liên kết luôn)
         orderRepository.save(order);
-        cart.getCartItermList().removeAll(selectedItems);
 
-
+        // Response
         OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
+        orderResponceDTO.setIdOrder(order.getID_ORDER());
+        orderResponceDTO.setIdUser(userRes.getIdUser());
         orderResponceDTO.setTotal_amount(totalAmount);
         orderResponceDTO.setDes(order.getDESCRIPTION());
         orderResponceDTO.setStatus(order.getSTATUS());
-        List<OrderItemListResponceDTO> orderListTemp  = new ArrayList<>();
-        for(Cart_Iterm cartItem : selectedItems){
-            OrderItemListResponceDTO orderListRes = new OrderItemListResponceDTO();
-            orderListRes.setProductId(cartItem.getProduct().getID_PRODUCT());
-            orderListRes.setNameProduct(cartItem.getProduct().getName());
-            orderListRes.setQuantity(cartItem.getQUANTITY());
-            orderListRes.setPrice(cartItem.getProduct().getPrice());
-            orderListRes.setStock(cartItem.getProduct().getStock());
-            orderListRes.setCategory(cartItem.getProduct().getCategory());
-            orderListRes.setDescription(cartItem.getProduct().getDescription());
-            orderListRes.setImagelink(cartItem.getProduct().getImagelink());
-            orderListTemp.add(orderListRes);
-        }
         orderResponceDTO.setOrderItermList(orderListTemp);
-
 
         return orderResponceDTO;
     }
@@ -336,59 +317,80 @@ public class UserServiceImpl implements UserService {
         useRes.setBirthDay(addInforUserRequestDTO.getBirthDay());
         userRepository.save(useRes);
     }
-    @Transactional
+    
     @Override
-    public OrderResponceDTO useOrderItem(OrderRequestDTO  orderRequestDTO){
+    // Cực kỳ quan trọng để lưu được cả Order và Order_Item cùng lúc
+    public OrderResponceDTO useOrderItem(OrderRequestDTO orderRequestDTO) {
+
+        // 1. Kiểm tra User
         User useRes = userRepository.selectUserByEmail(orderRequestDTO.getEmail());
-        Orders orders = new Orders();
-        List<Order_Iterm> orderItermList  = new ArrayList<>();
-        Order_Iterm orderItem = new Order_Iterm();
-        orders.setUser(useRes);
-        if(useRes == null){
+        if (useRes == null) {
             throw new ApiException(404, "User not found");
         }
-        List<OrderItemListResponceDTO> orderItemListRes  = new ArrayList<>();
-        OrderItemListResponceDTO  orderListRes = new OrderItemListResponceDTO();
+
+        // 2. Kiểm tra Sản phẩm & Kho
         Product productRes = productRepository.findByName(orderRequestDTO.getProductName());
         if (productRes == null) {
             throw new ApiException(404, "Product not found");
         }
-        if(productRes.getStock() < orderRequestDTO.getQuantity()){
-            throw new ApiException(400, "Product not enough");
+        if (productRes.getStock() < orderRequestDTO.getQuantity()) {
+            throw new ApiException(400, "Product not enough in stock");
         }
+
+        // 3. Trừ kho Product ngay sau khi kiểm tra
+        productRes.setStock(productRes.getStock() - orderRequestDTO.getQuantity());
+        productRepository.save(productRes);
+
+        // 4. Khởi tạo Đơn hàng (Orders)
+        Orders orders = new Orders();
+        orders.setUser(useRes);
+        orders.setDESCRIPTION("Order selected items");
+        orders.setSTATUS("PENDING");
+        orders.setIsDelete(false);
+        orders.setTOTAL_AMOUNT(productRes.getPrice() * orderRequestDTO.getQuantity());
+
+        // 5. LƯU ORDERS TRƯỚC ĐỂ LẤY ID (Manual Save Strategy)
+        orders = orderRepository.save(orders);
+
+        // 6. Khởi tạo Chi tiết đơn hàng (Order_Item)
+        Order_Iterm orderItem = new Order_Iterm();
         orderItem.setProduct(productRes);
-        orderItem.setOrder(orders);
         orderItem.setORIGINAL_PRICE(productRes.getOriginalPrice());
         orderItem.setPRICE(productRes.getPrice());
         orderItem.setQUANTITY(orderRequestDTO.getQuantity());
-        orderItermList.add(orderItem);
-        orders.setDESCRIPTION("Order selected items");
-        orders.setSTATUS("PENDING");
-        orders.setTOTAL_AMOUNT(productRes.getPrice() * orderRequestDTO.getQuantity());
-        orders.setOrderItermList(orderItermList);
-        OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
-        orderResponceDTO.setIdUser(useRes.getIdUser());
-        orderResponceDTO.setDes(orders.getDESCRIPTION());
 
-        //
-        orderListRes.setProductId(productRes.getID_PRODUCT());
-        orderListRes.setNameProduct(productRes.getName());
-        orderListRes.setQuantity(orderRequestDTO.getQuantity());
-        orderListRes.setPrice(productRes.getPrice());
-        orderListRes.setStock(productRes.getStock());
-        orderListRes.setCategory(productRes.getCategory());
-        orderListRes.setDescription(productRes.getDescription());
-        orderListRes.setImagelink(productRes.getImagelink());
-        orderItemListRes.add(orderListRes);
-        orderResponceDTO.setOrderItermList(orderItemListRes);
-        orderResponceDTO.setTotal_amount(orders.getTOTAL_AMOUNT());
-        orderResponceDTO.setIdOrder(orders.getID_ORDER());
-        orderResponceDTO.setStatus(orders.getSTATUS());
-        productRes.setStock(productRes.getStock() - orderRequestDTO.getQuantity());
+        // 7. Thiết lập liên kết khóa ngoại với Order đã có ID
+        orderItem.setOrder(orders);
 
-        productRepository.save(productRes);
-        orderRepository.save(orders);
-        return orderResponceDTO;
+        // 8. LƯU ORDER_ITEM THỦ CÔNG 
+        orderItem = orderItemRepository.save(orderItem);
+
+        // (Tùy chọn) Thêm vào list nếu cần sử dụng lại đối tượng đang trên Cache
+        orders.getOrderItermList().add(orderItem);
+
+        // 9. Chuyển đổi sang Response DTO và trả về
+        OrderResponceDTO responseDTO = new OrderResponceDTO();
+        responseDTO.setIdOrder(orders.getID_ORDER()); // Đảm bảo ID được ánh xạ đúng cách
+        responseDTO.setIdUser(useRes.getIdUser());
+        responseDTO.setDes(orders.getDESCRIPTION());
+        responseDTO.setStatus(orders.getSTATUS());
+        responseDTO.setTotal_amount(orders.getTOTAL_AMOUNT());
+
+        // Tạo Item list cho Response
+        OrderItemListResponceDTO itemResDTO = new OrderItemListResponceDTO();
+        itemResDTO.setProductId(productRes.getID_PRODUCT());
+        itemResDTO.setNameProduct(productRes.getName());
+        itemResDTO.setQuantity(orderRequestDTO.getQuantity());
+        itemResDTO.setPrice(productRes.getPrice());
+        itemResDTO.setStock(productRes.getStock());
+        itemResDTO.setCategory(productRes.getCategory());
+        itemResDTO.setDescription(productRes.getDescription());
+        itemResDTO.setImagelink(productRes.getImagelink());
+
+        List<OrderItemListResponceDTO> itemResList = new ArrayList<>();
+        itemResList.add(itemResDTO);
+        responseDTO.setOrderItermList(itemResList);
+
+        return responseDTO;
     }
-
 }

@@ -20,9 +20,9 @@ public interface UserService {
 
     String userDeleteProductInCart(DeleteItemFromCartRequestDTO delete);
 
-   // void undoProductInCart(ProductResponseDTO product);
+//    void undoProductInCart(ProductResponseDTO product);
 
-    OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderRequestDTO  orderRequestDTO);
+    OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderCartRequestDTO request);
 
      void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO);
 

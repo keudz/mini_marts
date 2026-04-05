@@ -597,7 +597,7 @@ SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu m
 -- DROP TABLE product ;
 -- TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
 -- TRUNCATE TABLE orders;
--- TRUNCATE TABLE oders_items;
+DROP TABLE oders_items;
 -- TRUNCATE TABLE orders;
   TRUNCATE TABLE product;
  DROP TABLE users;
