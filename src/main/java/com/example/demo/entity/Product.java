@@ -1,11 +1,14 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -40,9 +43,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Order_Iterm> orderItermList;
-
-
-    public Product() {};
 
 
 }

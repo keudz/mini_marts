@@ -69,21 +69,26 @@ public class UserServiceImpl implements UserService {
         User userCreate = new User();
         userCreate.setFullName(user.getFullName());
 
-        // MÃ HÓA MẬT KHẨU TẠI ĐÂY
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         userCreate.setPassword(encodedPassword);
 
         userCreate.setEmail(user.getEmail());
-        userCreate.setRole("user"); // Lưu ý: Nên để "user" viết thường cho khớp với hasAuthority("user")
+        userCreate.setRole("user");
         userCreate.setStatus("active");
         userCreate.setIsDelete(false);
 
-        userRepository.save(userCreate);
+        // --- SỬA TẠI ĐÂY ---
         Cart cart = new Cart();
-        userCreate.setCart(cart);
+        cart.setUser(userCreate);   // QUAN TRỌNG: Thiết lập chiều ngược lại
+        userCreate.setCart(cart);   // Thiết lập chiều xuôi
+        // -------------------
+
+        userRepository.save(userCreate); // Cascade sẽ lo phần còn lại
+
         UserCreateResponseDTO userRes = new UserCreateResponseDTO();
         userRes.setEmail(user.getEmail());
         userRes.setName(user.getFullName());
+
         return userRes;
     }
 
@@ -187,6 +192,9 @@ public class UserServiceImpl implements UserService {
         List<Cart_Iterm> cart_ItermList = cart.getCartItermList();
         int i = 0;
         for (Cart_Iterm cart_iterm : cart_ItermList) {
+            if (cart_iterm.getProduct() == null) {
+                continue; // Bỏ qua nếu không có product, tránh lỗi NullPointerException
+            }
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setId(i++);
             productResponseDTO.setNameProduct(cart_iterm.getProduct().getName());
@@ -214,14 +222,23 @@ public class UserServiceImpl implements UserService {
         return "da xoa thanh cong san pham " + delete.getNameProduct() + "ra khoi gio hang!!";
     }
 
-
-
+    @Transactional
     @Override
     public OrderResponceDTO useOrderSomeItemFromCartToOrder(OrderCartRequestDTO request) {
+        // Kiểm tra đầu vào: Tránh trường hợp DTO gửi lên không có danh sách sản phẩm dẫn đến NullPointerException
+        if (request.getProductNames() == null || request.getProductNames().isEmpty()) {
+            throw new ApiException(400, "Danh sách tên sản phẩm (productNames) không được để trống.");
+        }
+
         // Tìm User theo email
         User userRes = userRepository.selectUserByEmail(request.getEmail());
         if (userRes == null) {
             throw new ApiException(404, "User not found");
+        }
+
+        Cart cart = userRes.getCart();
+        if (cart == null || cart.getCartItermList().isEmpty()) {
+            throw new ApiException(400, "Cart is empty");
         }
 
         // Khởi tạo 1 đối tượng Orders duy nhất
@@ -236,22 +253,33 @@ public class UserServiceImpl implements UserService {
 
         int totalAmount = 0;
         List<OrderItemListResponceDTO> orderListTemp = new ArrayList<>();
+        List<Cart_Iterm> itemsToRemove = new ArrayList<>();
 
-        // Duyệt qua request items
-        for (CartItemDTO cartItem : request.getItems()) {
-            // Tìm Product
-            Product product = productRepository.findByName(cartItem.getProductName());
-            if (product == null) {
-                throw new ApiException(404, "Product not found: " + cartItem.getProductName());
+        // Duyệt qua request product names
+        for (String productName : request.getProductNames()) {
+            // Tìm CartItem tương ứng trong giỏ hàng
+            Cart_Iterm matchedCartItem = null;
+            for (Cart_Iterm ci : cart.getCartItermList()) {
+                if (ci.getProduct() != null && ci.getProduct().getName().equalsIgnoreCase(productName)) {
+                    matchedCartItem = ci;
+                    break;
+                }
             }
 
+            if (matchedCartItem == null) {
+                throw new ApiException(404, "Product not found in your cart: " + productName);
+            }
+
+            Product product = matchedCartItem.getProduct();
+            int cartQuantity = matchedCartItem.getQUANTITY();
+
             // Kiểm tra tồn kho
-            if (product.getStock() < cartItem.getQuantity()) {
+            if (product.getStock() < cartQuantity) {
                 throw new ApiException(400, "Product not enough in stock: " + product.getName());
             }
 
             // Trừ kho Product
-            product.setStock(product.getStock() - cartItem.getQuantity());
+            product.setStock(product.getStock() - cartQuantity);
             productRepository.save(product);
 
             // Tạo Order_Iterm
@@ -259,7 +287,7 @@ public class UserServiceImpl implements UserService {
             orderItem.setProduct(product);
             orderItem.setORIGINAL_PRICE(product.getOriginalPrice());
             orderItem.setPRICE(product.getPrice());
-            orderItem.setQUANTITY(cartItem.getQuantity());
+            orderItem.setQUANTITY(cartQuantity);
 
             // Thiết lập MQH với Orders
             orderItem.setOrder(order);
@@ -270,13 +298,16 @@ public class UserServiceImpl implements UserService {
             order.getOrderItermList().add(orderItem);
 
             // Cộng dồn
-            totalAmount += product.getPrice() * cartItem.getQuantity();
+            totalAmount += product.getPrice() * cartQuantity;
+
+            // Đánh dấu Cart_Iterm để xóa
+            itemsToRemove.add(matchedCartItem);
 
             // Chuẩn bị Response DTO cho item
             OrderItemListResponceDTO itemResDTO = new OrderItemListResponceDTO();
             itemResDTO.setProductId(product.getID_PRODUCT());
             itemResDTO.setNameProduct(product.getName());
-            itemResDTO.setQuantity(cartItem.getQuantity());
+            itemResDTO.setQuantity(cartQuantity);
             itemResDTO.setPrice(product.getPrice());
             itemResDTO.setStock(product.getStock());
             itemResDTO.setCategory(product.getCategory());
@@ -291,6 +322,11 @@ public class UserServiceImpl implements UserService {
         // Lưu orderRepository.save(orders) => (Cập nhật cập nhật tổng tiền Cascade liên kết luôn)
         orderRepository.save(order);
 
+        // Xóa các Cart_Iterm đã được chuyển thành Order
+        cart.getCartItermList().removeAll(itemsToRemove);
+        cartItemRepository.deleteAll(itemsToRemove);
+        cartRepository.save(cart);
+
         // Response
         OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
         orderResponceDTO.setIdOrder(order.getID_ORDER());
@@ -302,6 +338,8 @@ public class UserServiceImpl implements UserService {
 
         return orderResponceDTO;
     }
+
+
 
     @Override
     public void addInforUser(AddInforUserRequestDTO addInforUserRequestDTO){
@@ -319,7 +357,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    // Cực kỳ quan trọng để lưu được cả Order và Order_Item cùng lúc
+    @Transactional// Cực kỳ quan trọng để lưu được cả Order và Order_Item cùng lúc
     public OrderResponceDTO useOrderItem(OrderRequestDTO orderRequestDTO) {
 
         // 1. Kiểm tra User

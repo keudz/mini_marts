@@ -3,9 +3,11 @@ package com.example.demo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "oders_items")
 public class Order_Iterm {
 
@@ -29,14 +31,6 @@ public class Order_Iterm {
     @JsonBackReference
     private Orders order;
 
-    public Order_Iterm() {
-    }
-
-    public Order_Iterm(int id, int ORIGINAL_PRICE, int PRICE) {
-        this.id = id;
-        this.ORIGINAL_PRICE = ORIGINAL_PRICE;
-        this.PRICE = PRICE;
-    }
 
 
 }

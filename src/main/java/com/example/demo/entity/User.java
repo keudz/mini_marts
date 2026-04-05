@@ -3,12 +3,14 @@ package com.example.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name =  "users")
 public class User {
 
@@ -52,7 +54,6 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Orders> order;
 
-   public User (){};
 
 
 

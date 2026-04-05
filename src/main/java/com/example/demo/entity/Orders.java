@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
 public class Orders {
@@ -25,9 +24,11 @@ public class Orders {
     private Boolean isDelete = false; // Nên set mặc định là false
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Order_Iterm> orderItermList = new ArrayList<>(); // Khởi tạo sẵn tránh NullPointerException
+    private List<Order_Iterm> orderItermList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "ID_USER")
     private User user;
+
+
 }
