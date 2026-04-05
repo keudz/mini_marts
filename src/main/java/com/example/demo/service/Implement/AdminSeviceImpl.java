@@ -1,9 +1,11 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.response.OrderItemListResponceDTO;
 import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.entity.Order_Iterm;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
@@ -21,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 
 public class AdminSeviceImpl implements AdminService {
@@ -29,7 +30,7 @@ public class AdminSeviceImpl implements AdminService {
     private UserRepository userRepository;
 
     @Autowired
-    private ProductRepository  productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -39,10 +40,10 @@ public class AdminSeviceImpl implements AdminService {
 
     @Override
 
-    public List<UserResponDTO>  showAllUser() {
+    public List<UserResponDTO> showAllUser() {
         List<User> userList = userRepository.findAll();
         List<UserResponDTO> userResponDTOList = new ArrayList<>();
-        for(User user:userList){
+        for (User user : userList) {
             userResponDTOList.add(userMapper.userToUserResponDTO(user));
         }
         return userResponDTOList;
@@ -52,14 +53,14 @@ public class AdminSeviceImpl implements AdminService {
     public void blockUser(int id) {
         userRepository.blockUser(id);
     }
+
     @Override
     public void unlockUser(int id) {
         userRepository.activeUser(id);
     }
 
-
     @Override
-    public Product addProduct(ProductRequestDTO  product) {
+    public Product addProduct(ProductRequestDTO product) {
         Product newProduct = new Product();
         newProduct.setName(product.getName());
         newProduct.setPrice(product.getPrice());
@@ -73,55 +74,51 @@ public class AdminSeviceImpl implements AdminService {
         return newProduct;
     }
 
-
     @Override
     public void updateProduct(ProductRequestDTO update) {
-     Optional<Product> productOptional = productRepository.findById(update.getId());
+        Optional<Product> productOptional = productRepository.findById(update.getId());
 
-     if(productOptional.isPresent()){
-         Product product = productOptional.get();
-         if(update.getName()!=null){
-             product.setName(update.getName());
-         }
-         if(update.getCategory()!=null){
-             product.setCategory(update.getCategory());
-         }
-         if(update.getDescription() != null && !update.getDescription().isEmpty()){
-             product.setDescription(update.getDescription());
-         }
-         if(update.getImagelink()!=null){
-             product.setImagelink(update.getImagelink());
-         }
-         if(update.getSubCategory()!=null){
-             product.setSubCategory(update.getSubCategory());
-         }
-         if(update.getOriginalPrice() != null){
-             product.setOriginalPrice(update.getOriginalPrice());
-         }
-         if(update.getPrice() != null){
-             product.setPrice(update.getPrice());
-         }
-         if(update.getStock() != null){
-             product.setStock(update.getStock());
-         }
-         productRepository.save(product);
-     }
-     else{
-         throw new ApiException(404, "product  not found");
-     }
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            if (update.getName() != null) {
+                product.setName(update.getName());
+            }
+            if (update.getCategory() != null) {
+                product.setCategory(update.getCategory());
+            }
+            if (update.getDescription() != null && !update.getDescription().isEmpty()) {
+                product.setDescription(update.getDescription());
+            }
+            if (update.getImagelink() != null) {
+                product.setImagelink(update.getImagelink());
+            }
+            if (update.getSubCategory() != null) {
+                product.setSubCategory(update.getSubCategory());
+            }
+            if (update.getOriginalPrice() != null) {
+                product.setOriginalPrice(update.getOriginalPrice());
+            }
+            if (update.getPrice() != null) {
+                product.setPrice(update.getPrice());
+            }
+            if (update.getStock() != null) {
+                product.setStock(update.getStock());
+            }
+            productRepository.save(product);
+        } else {
+            throw new ApiException(404, "product  not found");
+        }
 
     }
 
-
     @Override
-    public void deleteProduct (int id) {
+    public void deleteProduct(int id) {
         Optional<Product> product = productRepository.findById(id);
-        if(product.isPresent()){
+        if (product.isPresent()) {
             Product productTemp = product.get();
             productTemp.setIsDelete(true);
             productRepository.save(productTemp);
-        }
-        else{
+        } else {
             throw new ApiException(404, "product not found");
         }
     }
@@ -130,7 +127,7 @@ public class AdminSeviceImpl implements AdminService {
     public List<ProductResponseDTO> showAllProduct() {
         List<Product> productOriginal = productRepository.getProductByIsDelete();
         List<ProductResponseDTO> ListProductRespon = new ArrayList<>();
-        for(Product product : productOriginal){
+        for (Product product : productOriginal) {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setId(product.getID_PRODUCT());
             productResponseDTO.setNameProduct(product.getName());
@@ -148,15 +145,15 @@ public class AdminSeviceImpl implements AdminService {
     @Override
     public void redoProduct(int id) {
         Optional<Product> product = productRepository.findById(id);
-        if(product.isPresent()){
+        if (product.isPresent()) {
             Product productTemp = product.get();
             productTemp.setIsDelete(false);
             productRepository.save(productTemp);
-        }
-        else {
+        } else {
             throw new ApiException(404, "product not found");
         }
     }
+
     @Override
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -166,13 +163,47 @@ public class AdminSeviceImpl implements AdminService {
     public List<OrderResponceDTO> getAllOrders() {
         List<Orders> ordersList = orderRepository.findAll();
         List<OrderResponceDTO> orderResponceDTOList = new ArrayList<>();
-        for(Orders order : ordersList){
+        for (Orders order : ordersList) {
             OrderResponceDTO orderResponceDTO = new OrderResponceDTO();
             orderResponceDTO.setIdOrder(order.getID_ORDER());
             orderResponceDTO.setDes(order.getDESCRIPTION());
             orderResponceDTO.setStatus(order.getSTATUS());
             orderResponceDTO.setTotal_amount(order.getTOTAL_AMOUNT());
-            orderResponceDTO.setIdUser(order.getIdUser());
+            if (order.getUser() != null) {
+                orderResponceDTO.setIdUser(order.getUser().getIdUser());
+                orderResponceDTO.setUserEmail(order.getUser().getEmail());
+                orderResponceDTO.setUserPhone(order.getUser().getNumberPhone());
+            } else {
+                orderResponceDTO.setIdUser(order.getIdUser());
+            }
+
+            List<OrderItemListResponceDTO> orderItemListRes = new ArrayList<>();
+            if (order.getOrderItermList() != null) {
+                for (Order_Iterm orderItem : order.getOrderItermList()) {
+                    OrderItemListResponceDTO itemDTO = new OrderItemListResponceDTO();
+                    if (orderItem.getProduct() != null) {
+                        itemDTO.setProductId(orderItem.getProduct().getID_PRODUCT());
+                        itemDTO.setNameProduct(orderItem.getProduct().getName());
+                        int quantity = orderItem.getQUANTITY();
+                        if (quantity == 0) {
+                            if (orderItem.getORIGINAL_PRICE() > 0) {
+                                quantity = (int) Math.round(orderItem.getPRICE() / orderItem.getORIGINAL_PRICE());
+                            } else if (orderItem.getProduct().getPrice() > 0 && order.getTOTAL_AMOUNT() > 0) {
+                                quantity = (int) Math.round(order.getTOTAL_AMOUNT() / orderItem.getProduct().getPrice());
+                            }
+                        }
+                        itemDTO.setQuantity(quantity);
+                        itemDTO.setPrice(orderItem.getProduct().getPrice());
+                        itemDTO.setStock(orderItem.getProduct().getStock());
+                        itemDTO.setCategory(orderItem.getProduct().getCategory());
+                        itemDTO.setDescription(orderItem.getProduct().getDescription());
+                        itemDTO.setImagelink(orderItem.getProduct().getImagelink());
+                    }
+                    orderItemListRes.add(itemDTO);
+                }
+            }
+            orderResponceDTO.setOrderItermList(orderItemListRes);
+
             orderResponceDTOList.add(orderResponceDTO);
         }
         return orderResponceDTOList;
@@ -180,9 +211,9 @@ public class AdminSeviceImpl implements AdminService {
 
     @Override
     public void setDeLiveringForOrder(int id) {
-       Orders orders = orderRepository.findByIdOrder(id);
-       orders.setSTATUS("DELIVERING");
-       orderRepository.save(orders);
+        Orders orders = orderRepository.findByIdOrder(id);
+        orders.setSTATUS("DELIVERING");
+        orderRepository.save(orders);
     }
 
     @Override

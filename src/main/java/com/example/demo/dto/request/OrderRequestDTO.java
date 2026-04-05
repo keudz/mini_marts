@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequestDTO {
     private String email;
-    private List<String> listProduct;
+    private String productName;
     private int quantity;
 
 

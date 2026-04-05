@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +27,11 @@ public class OrderResponceDTO {
 
    private int idUser;
 
+   @JsonInclude(JsonInclude.Include.NON_NULL)
+   private String userEmail;
 
+   @JsonInclude(JsonInclude.Include.NON_NULL)
+   private String userPhone;
 
 }
 

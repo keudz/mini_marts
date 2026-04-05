@@ -1,11 +1,31 @@
 package com.example.demo.service.Implement;
 
-import com.example.demo.dto.request.*;
-import com.example.demo.dto.response.*;
-import com.example.demo.entity.*;
+import com.example.demo.dto.request.AddInforUserRequestDTO;
+import com.example.demo.dto.request.AddProductToCartRequestDTO;
+import com.example.demo.dto.request.DeleteItemFromCartRequestDTO;
+import com.example.demo.dto.request.EmailRequest;
+import com.example.demo.dto.request.OrderRequestDTO;
+import com.example.demo.dto.request.UserCreateRequestDTO;
+import com.example.demo.dto.request.UserLoginRequestDTO;
+import com.example.demo.dto.response.AddProductInCartResponseDTO;
+import com.example.demo.dto.response.OrderItemListResponceDTO;
+import com.example.demo.dto.response.OrderResponceDTO;
+import com.example.demo.dto.response.ProductResponseDTO;
+import com.example.demo.dto.response.UserCreateResponseDTO;
+import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.entity.Cart;
+import com.example.demo.entity.Cart_Iterm;
+import com.example.demo.entity.Order_Iterm;
+import com.example.demo.entity.Orders;
+import com.example.demo.entity.Product;
+import com.example.demo.entity.User;
 import com.example.demo.exception.ApiException;
 import com.example.demo.mapper.UserMapper;
-import com.example.demo.repository.*;
+import com.example.demo.repository.CartItemRepository;
+import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         userCreate.setEmail(user.getEmail());
         userCreate.setRole("user"); // Lưu ý: Nên để "user" viết thường cho khớp với hasAuthority("user")
-        userCreate.setStatus("Active");
+        userCreate.setStatus("active");
         userCreate.setIsDelete(false);
 
         userRepository.save(userCreate);
@@ -206,10 +226,10 @@ public class UserServiceImpl implements UserService {
 
         // 🔥 Lấy Product từ list tên
         List<Product> listProduct = new ArrayList<>();
-        for (String orderRes : orderRequestDTO.getListProduct()){
-            Product product = productRepository.findByName(orderRes);
+        if (orderRequestDTO.getProductName() != null && !orderRequestDTO.getProductName().isEmpty()) {
+            Product product = productRepository.findByName(orderRequestDTO.getProductName());
             if (product == null) {
-                throw new ApiException(404, "Product not found: " + orderRes);
+                throw new ApiException(404, "Product not found: " + orderRequestDTO.getProductName());
             }
             listProduct.add(product);
         }
@@ -255,13 +275,15 @@ public class UserServiceImpl implements UserService {
             orderItem.setProduct(cartItem.getProduct());
 
             double price = cartItem.getProduct().getPrice();
+            double originalPrice = cartItem.getProduct().getOriginalPrice();
 
-            orderItem.setORIGINAL_PRICE(price);
-            orderItem.setPRICE(price * cartItem.getQUANTITY());
+            orderItem.setORIGINAL_PRICE(originalPrice);
+            orderItem.setPRICE(price);
+            orderItem.setQUANTITY(cartItem.getQUANTITY());
 
             orderItem.setOrder(order);
 
-            totalAmount += orderItem.getPRICE();
+            totalAmount += price * cartItem.getQUANTITY();
 
             orderItemList.add(orderItem);
 
@@ -284,9 +306,14 @@ public class UserServiceImpl implements UserService {
         List<OrderItemListResponceDTO> orderListTemp  = new ArrayList<>();
         for(Cart_Iterm cartItem : selectedItems){
             OrderItemListResponceDTO orderListRes = new OrderItemListResponceDTO();
+            orderListRes.setProductId(cartItem.getProduct().getID_PRODUCT());
             orderListRes.setNameProduct(cartItem.getProduct().getName());
             orderListRes.setQuantity(cartItem.getQUANTITY());
             orderListRes.setPrice(cartItem.getProduct().getPrice());
+            orderListRes.setStock(cartItem.getProduct().getStock());
+            orderListRes.setCategory(cartItem.getProduct().getCategory());
+            orderListRes.setDescription(cartItem.getProduct().getDescription());
+            orderListRes.setImagelink(cartItem.getProduct().getImagelink());
             orderListTemp.add(orderListRes);
         }
         orderResponceDTO.setOrderItermList(orderListTemp);
@@ -320,20 +347,20 @@ public class UserServiceImpl implements UserService {
         if(useRes == null){
             throw new ApiException(404, "User not found");
         }
-        Product productRes = new Product();
-       List<OrderItemListResponceDTO> orderItemListRes  = new   ArrayList<>();
-       OrderItemListResponceDTO  orderListRes = new OrderItemListResponceDTO();
-        for(String name : orderRequestDTO.getListProduct()){
-            if(name.isEmpty()){
-                break;
-            }
-            productRes = productRepository.findByName(name);
+        List<OrderItemListResponceDTO> orderItemListRes  = new ArrayList<>();
+        OrderItemListResponceDTO  orderListRes = new OrderItemListResponceDTO();
+        Product productRes = productRepository.findByName(orderRequestDTO.getProductName());
+        if (productRes == null) {
+            throw new ApiException(404, "Product not found");
         }
         if(productRes.getStock() < orderRequestDTO.getQuantity()){
             throw new ApiException(400, "Product not enough");
         }
         orderItem.setProduct(productRes);
         orderItem.setOrder(orders);
+        orderItem.setORIGINAL_PRICE(productRes.getOriginalPrice());
+        orderItem.setPRICE(productRes.getPrice());
+        orderItem.setQUANTITY(orderRequestDTO.getQuantity());
         orderItermList.add(orderItem);
         orders.setDESCRIPTION("Order selected items");
         orders.setSTATUS("PENDING");
@@ -344,9 +371,14 @@ public class UserServiceImpl implements UserService {
         orderResponceDTO.setDes(orders.getDESCRIPTION());
 
         //
+        orderListRes.setProductId(productRes.getID_PRODUCT());
         orderListRes.setNameProduct(productRes.getName());
         orderListRes.setQuantity(orderRequestDTO.getQuantity());
         orderListRes.setPrice(productRes.getPrice());
+        orderListRes.setStock(productRes.getStock());
+        orderListRes.setCategory(productRes.getCategory());
+        orderListRes.setDescription(productRes.getDescription());
+        orderListRes.setImagelink(productRes.getImagelink());
         orderItemListRes.add(orderListRes);
         orderResponceDTO.setOrderItermList(orderItemListRes);
         orderResponceDTO.setTotal_amount(orders.getTOTAL_AMOUNT());

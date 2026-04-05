@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "order_item")
+@Table(name = "orders_item")
 public class Order_Iterm {
 
     @Id
@@ -17,6 +17,8 @@ public class Order_Iterm {
     private double ORIGINAL_PRICE;
 
     private double PRICE;
+    
+    private int QUANTITY;
 
     @ManyToOne
     @JoinColumn(name = "ID_PRODUCT")

@@ -8,9 +8,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItemListResponceDTO {
+    private int productId;
+    
     private String nameProduct;
 
     private int quantity;
 
     private double price;
+
+    private int stock;
+
+    private String category;
+
+    private String description;
+
+    private String imagelink;
 }
