@@ -37,6 +37,8 @@ public class User {
     private LocalDate birthDay;
 
     private String sex;
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGTEXT")
     private String image;
 
     @Column(name = "is_delete")
