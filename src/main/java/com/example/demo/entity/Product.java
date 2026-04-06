@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 @Data
 @Entity
@@ -36,6 +37,9 @@ public class Product {
 
     @Column(name = "is_delete")
     private Boolean isDelete;
+
+    @Column(name = "create_at")
+    private LocalDate createAt;
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Cart_Iterm> cartItermList;

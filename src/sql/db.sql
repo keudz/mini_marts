@@ -593,7 +593,8 @@ INSERT INTO oders_items (id, ID_PRODUCT, ID_ORDER, original_price, price) VALUES
 -- #alter table oders_items  add column id INT;
 --
 SET FOREIGN_KEY_CHECKS  = 0; #lệnh này dùng khi sửa cơ sở dữ liệu mà k bị checkForeignKey
---
+DROP TABLE product;
+
 -- DROP TABLE product ;
 -- TRUNCATE TABLE carts;#xoá tất cả dữ liệu của table product
 -- TRUNCATE TABLE orders;
@@ -631,3 +632,6 @@ where ID_PRODUCT = 1;
 
 Select * FROM product
 WHERE product.is_delete is null or is_delete = false;
+
+UPDATE mini_mart_dev.orders o
+set  o.STATUS = "COMPLETED" WHERE status = "PENDING"

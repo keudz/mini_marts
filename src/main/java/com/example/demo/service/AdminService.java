@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.ProductRequestDTO;
+import com.example.demo.dto.response.DashboardResponseDTO;
 import com.example.demo.dto.response.OrderResponceDTO;
 import com.example.demo.dto.response.ProductResponseDTO;
 import com.example.demo.dto.response.UserResponDTO;
@@ -34,5 +35,9 @@ public interface AdminService {
     void setDeLiveringForOrder(int id);
 
     void setCompletedForOrder(int id);
+
+    DashboardResponseDTO getDashboardMetrics();
+
+    void applySmartDiscount();
 }
 
