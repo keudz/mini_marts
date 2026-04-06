@@ -89,4 +89,9 @@ public class UserController {
         return userSevice.useOrderItem(orderRequestDTO);
     }
 
+    @PostMapping(UrlConstant.USER_GET_ALL_ORDER)
+    public List<OrderResponceDTO> GetAllOrder(@Valid @RequestBody EmailRequest  emailRequest) {
+        return userSevice.getAllOrderUser(emailRequest);
+    }
+
 }

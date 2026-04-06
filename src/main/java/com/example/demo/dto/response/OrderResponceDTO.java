@@ -15,23 +15,23 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderResponceDTO {
-   @JsonInclude(JsonInclude.Include.NON_NULL)
+
    private int idOrder;
 
    private String des;
-
+   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private String status;
-
+   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private double total_amount;
 
    private List<OrderItemListResponceDTO> orderItermList;
-
+   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private int idUser;
 
-   @JsonInclude(JsonInclude.Include.NON_NULL)
+   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private String userEmail;
 
-   @JsonInclude(JsonInclude.Include.NON_NULL)
+   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private String userPhone;
 
 }

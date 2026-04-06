@@ -431,4 +431,33 @@ public class UserServiceImpl implements UserService {
 
         return responseDTO;
     }
+
+    @Override
+    public List<OrderResponceDTO> getAllOrderUser (EmailRequest emailRequest){
+          User useRes = userRepository.selectUserByEmail(emailRequest.getEmail());
+          if(useRes == null){
+              throw new ApiException(404, "User not found");
+          }
+          List<OrderResponceDTO> orderResponceDTO = new ArrayList<>();
+          List<Orders> orders = useRes.getOrder();
+          for(Orders order:orders){
+              List<Order_Iterm> orderItermList = order.getOrderItermList();
+              List<OrderItemListResponceDTO> orderItemListResponceDTO = new ArrayList<>();
+              OrderResponceDTO orderItem = new OrderResponceDTO();
+              orderItem.setIdOrder(order.getID_ORDER());
+              orderItem.setDes(order.getDESCRIPTION());
+              for(Order_Iterm orderIterm :orderItermList){
+                  OrderItemListResponceDTO itemResDTO = new OrderItemListResponceDTO();
+                  itemResDTO.setProductId(orderIterm.getProduct().getID_PRODUCT());
+                  itemResDTO.setNameProduct(orderIterm.getProduct().getName());
+                  itemResDTO.setQuantity(orderIterm.getQUANTITY());
+                  itemResDTO.setPrice(orderIterm.getProduct().getPrice());
+                  itemResDTO.setImagelink(orderIterm.getProduct().getImagelink());
+                  orderItemListResponceDTO.add(itemResDTO);
+              }
+              orderItem.setOrderItermList(orderItemListResponceDTO);
+              orderResponceDTO.add(orderItem);
+          }
+   return orderResponceDTO;
+    }
 }

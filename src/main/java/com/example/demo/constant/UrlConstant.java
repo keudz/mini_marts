@@ -25,6 +25,7 @@ public class UrlConstant {
     public static final String SET_SHIPPING_FOR_ORDER = "/api/v1/admin/orders/shipping";
     public static final String SET_COMPLETED_FOR_ORDER = "/api/v1/admin/orders/completed";
     public static final String USER_ORDER = "/api/v1/userOrder";
+    public static final String USER_GET_ALL_ORDER = "/api/v1/userGetAllOrders";
 
 
 

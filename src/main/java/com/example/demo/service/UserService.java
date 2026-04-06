@@ -28,6 +28,9 @@ public interface UserService {
 
      OrderResponceDTO useOrderItem(OrderRequestDTO  orderRequestDTO);
 
+     List<OrderResponceDTO> getAllOrderUser (EmailRequest emailRequest);
+
+
 
 
 
