@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -29,4 +32,23 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query(value = "SELECT p FROM Product p where p.isDelete = false or p.isDelete is null")
     List<Product> getProductByIsDelete();
 
+    @Query("SELECT p FROM Product p WHERE p.stock < 10 AND (p.isDelete = false OR p.isDelete IS NULL)")
+    List<Product> getLowStockProducts();
+
+    @Query("SELECT p FROM Product p JOIN p.orderItermList oi JOIN oi.order o WHERE o.STATUS = 'COMPLETED' AND (p.isDelete = false OR p.isDelete IS NULL) GROUP BY p.ID_PRODUCT ORDER BY SUM(oi.QUANTITY) DESC")
+    List<Product> getTopSellingProducts(org.springframework.data.domain.Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.stock > 20 AND p.createAt < :dateThreshold AND (p.isDelete = false OR p.isDelete IS NULL)")
+    List<Product> findOldProductsForDiscount(@Param("dateThreshold") LocalDate dateThreshold);
+
+
+
+    @Query("SELECT p, SUM(oi.QUANTITY) FROM Product p " +
+            "JOIN p.orderItermList oi " +
+            "JOIN oi.order o " +
+            "WHERE o.STATUS = 'COMPLETED' " +
+            "AND (p.isDelete = false OR p.isDelete IS NULL) " +
+            "GROUP BY p.ID_PRODUCT " +
+            "ORDER BY SUM(oi.QUANTITY) DESC")
+    List<Object[]> getTopSellingProductsWithSales(Pageable pageable);
 }

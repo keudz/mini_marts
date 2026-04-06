@@ -2,10 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.constant.UrlConstant;
 import com.example.demo.dto.request.ProductRequestDTO;
-import com.example.demo.dto.response.OrderResponceDTO;
-import com.example.demo.dto.response.ProductResponseDTO;
-import com.example.demo.dto.response.UserCreateResponseDTO;
-import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.dto.response.*;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.User;
 import com.example.demo.service.AdminService;
@@ -116,6 +113,19 @@ public class AdminController {
         adminService.setCompletedForOrder(id);
     }
 
+    // Import cái này ở đầu file nhé: import com.example.demo.dto.response.DashboardResponseDTO;
 
+    @PostMapping(UrlConstant.ADMIN_DASHBOARD) // M có thể thay bằng UrlConstant của m nếu có
+    @PreAuthorize("hasAuthority('admin')")
+    public DashboardResponseDTO getDashboardData() {
+        return adminService.getDashboardMetrics();
+    }
+
+    @PostMapping(UrlConstant.SMART_DISCOUNT)
+    @PreAuthorize("hasAuthority('admin')")
+    public String triggerSmartDiscount() {
+        adminService.applySmartDiscount();
+        return "Đã quét và áp dụng giảm giá tự động thành công!";
+    }
 }
 

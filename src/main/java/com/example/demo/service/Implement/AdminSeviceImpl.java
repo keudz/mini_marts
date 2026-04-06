@@ -1,10 +1,7 @@
 package com.example.demo.service.Implement;
 
 import com.example.demo.dto.request.ProductRequestDTO;
-import com.example.demo.dto.response.OrderItemListResponceDTO;
-import com.example.demo.dto.response.OrderResponceDTO;
-import com.example.demo.dto.response.ProductResponseDTO;
-import com.example.demo.dto.response.UserResponDTO;
+import com.example.demo.dto.response.*;
 import com.example.demo.entity.Order_Iterm;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
@@ -17,11 +14,20 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.OrderComparator;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.example.demo.dto.response.DashboardResponseDTO;
+import com.example.demo.dto.response.ProductSalesDTO;
+import org.springframework.data.domain.PageRequest;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.PageRequest;
+ import java.time.LocalDate;
+ import java.util.HashMap;
+ import java.util.Map;
 
 @Service
 
@@ -234,5 +240,93 @@ public class AdminSeviceImpl implements AdminService {
         Orders orders = orderRepository.findByIdOrder(id);
         orders.setSTATUS("COMPLETED");
         orderRepository.save(orders);
+    }
+
+
+
+
+
+    // ... (các code cũ của m)
+
+    @Override
+    public DashboardResponseDTO getDashboardMetrics() {
+        DashboardResponseDTO dashboard = new DashboardResponseDTO();
+
+        // 1. Business Metrics
+        Double revenue = orderRepository.calculateTotalRevenue();
+        dashboard.setTotalRevenue(revenue != null ? revenue : 0.0);
+
+        Integer orders = orderRepository.countCompletedOrders();
+        dashboard.setTotalOrders(orders != null ? orders : 0);
+
+        Integer productsSold = orderRepository.countTotalProductsSold();
+        dashboard.setTotalProductsSold(productsSold != null ? productsSold : 0);
+
+        // 2. Trạng thái đơn hàng
+        Map<String, Long> statusSummary = new HashMap<>();
+        List<Object[]> statusCounts = orderRepository.countOrdersByStatus();
+        for (Object[] result : statusCounts) {
+            String status = (String) result[0];
+            Long count = (Long) result[1];
+            statusSummary.put(status != null ? status : "UNKNOWN", count);
+        }
+        dashboard.setOrderStatusSummary(statusSummary);
+
+        // 3. Low Stock Alerts
+        List<Product> lowStock = productRepository.getLowStockProducts();
+        List<ProductResponseDTO> lowStockDTOs = new ArrayList<>();
+        for (Product p : lowStock) {
+            lowStockDTOs.add(mapToProductResponDTO(p));
+        }
+        dashboard.setLowStockProducts(lowStockDTOs);
+
+
+        org.springframework.data.domain.Pageable top5 = org.springframework.data.domain.PageRequest.of(0, 5);
+        List<Object[]> topSellingData = productRepository.getTopSellingProductsWithSales(top5);
+        List<ProductSalesDTO> topSellingDTOs = new ArrayList<>();
+
+        for (Object[] result : topSellingData) {
+            Product p = (Product) result[0];
+            Long salesCount = (Long) result[1];
+
+            ProductSalesDTO salesDTO = new ProductSalesDTO();
+            salesDTO.setProduct(mapToProductResponDTO(p));
+            salesDTO.setSalesQuantity(salesCount != null ? salesCount : 0L);
+
+            topSellingDTOs.add(salesDTO);
+        }
+        dashboard.setTopSellingProducts(topSellingDTOs);
+
+        return dashboard;
+    }
+
+    @Override
+    public void applySmartDiscount() {
+        // Lấy ngày của 30 ngày trước
+        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
+
+        // Tìm các sản phẩm tồn nhiều và đã nhập lâu
+        List<Product> oldProducts = productRepository.findOldProductsForDiscount(thirtyDaysAgo);
+
+        for (Product p : oldProducts) {
+            // Giảm giá 15% (nhân với 0.85)
+            double newPrice = p.getPrice() * 0.85;
+            p.setPrice(newPrice);
+            productRepository.save(p);
+        }
+    }
+
+    // Hàm Helper hỗ trợ map Product sang DTO
+    private ProductResponseDTO mapToProductResponDTO(Product product) {
+        ProductResponseDTO dto = new ProductResponseDTO();
+        dto.setId(product.getID_PRODUCT());
+        dto.setNameProduct(product.getName());
+        dto.setPriceProduct(product.getPrice());
+        dto.setQuantityProduct(product.getStock());
+        dto.setDescriptionProduct(product.getDescription());
+        dto.setCategoryProduct(product.getCategory());
+        dto.setImageLink(product.getImagelink());
+        dto.setSubCategoryProduct(product.getSubCategory());
+        return dto;
     }
 }
