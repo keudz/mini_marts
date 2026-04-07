@@ -317,7 +317,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Lưu tổng tiền
-        order.setTOTAL_AMOUNT(totalAmount);
+        order.setTOTAL_AMOUNT(totalAmount + 30000);
         
         // Lưu orderRepository.save(orders) => (Cập nhật cập nhật tổng tiền Cascade liên kết luôn)
         orderRepository.save(order);
@@ -385,7 +385,7 @@ public class UserServiceImpl implements UserService {
         orders.setDESCRIPTION("Order selected items");
         orders.setSTATUS("PENDING");
         orders.setIsDelete(false);
-        orders.setTOTAL_AMOUNT(productRes.getPrice() * orderRequestDTO.getQuantity());
+        orders.setTOTAL_AMOUNT(productRes.getPrice() * orderRequestDTO.getQuantity() + 30000);
 
         // 5. LƯU ORDERS TRƯỚC ĐỂ LẤY ID (Manual Save Strategy)
         orders = orderRepository.save(orders);
@@ -447,7 +447,7 @@ public class UserServiceImpl implements UserService {
               orderItem.setIdOrder(order.getID_ORDER());
               orderItem.setDes(order.getDESCRIPTION());
               orderItem.setStatus(order.getSTATUS());
-              orderItem.setTotal_amount(order.getTOTAL_AMOUNT());
+              orderItem.setTotal_amount(order.getTOTAL_AMOUNT() + 30000);
 
               for(Order_Iterm orderIterm :orderItermList){
                   OrderItemListResponceDTO itemResDTO = new OrderItemListResponceDTO();
