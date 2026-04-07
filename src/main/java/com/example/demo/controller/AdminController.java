@@ -122,7 +122,7 @@ public class AdminController {
     }
 
     @PostMapping(UrlConstant.SMART_DISCOUNT)
-    @PreAuthorize("hasAuthority('admin')")
+
     public String triggerSmartDiscount() {
         adminService.applySmartDiscount();
         return "Đã quét và áp dụng giảm giá tự động thành công!";

@@ -43,7 +43,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 UrlConstant.API_V1_CREATE_USER,
                                 UrlConstant.API_V1_LOGIN_USERS,
-                                UrlConstant.API_V1_SHOW_ALL_PRODUCT
+                                UrlConstant.API_V1_SHOW_ALL_PRODUCT,
+                                UrlConstant.SMART_DISCOUNT
                         ).permitAll()
 
                         // 2. NHÓM CHỈ ADMIN (Admin Only)

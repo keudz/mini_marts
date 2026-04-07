@@ -38,7 +38,12 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query("SELECT p FROM Product p JOIN p.orderItermList oi JOIN oi.order o WHERE o.STATUS = 'COMPLETED' AND (p.isDelete = false OR p.isDelete IS NULL) GROUP BY p.ID_PRODUCT ORDER BY SUM(oi.QUANTITY) DESC")
     List<Product> getTopSellingProducts(org.springframework.data.domain.Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.stock > 20 AND p.createAt < :dateThreshold AND (p.isDelete = false OR p.isDelete IS NULL)")
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN Order_Iterm oi ON p.ID_PRODUCT = oi.product.ID_PRODUCT " +
+            "WHERE p.createAt < :dateThreshold " +
+            "AND (p.isDelete = false OR p.isDelete IS NULL) " +
+            "GROUP BY p.ID_PRODUCT " +
+            "HAVING COALESCE(SUM(oi.QUANTITY), 0) < 5")
     List<Product> findOldProductsForDiscount(@Param("dateThreshold") LocalDate dateThreshold);
 
 
