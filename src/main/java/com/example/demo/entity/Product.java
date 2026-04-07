@@ -41,6 +41,9 @@ public class Product {
     @Column(name = "create_at")
     private LocalDate createAt;
 
+    @Column(name ="is_discount")
+    private Boolean isDiscount;
+
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Cart_Iterm> cartItermList;
 //    fetch = FetchType.LAZY(Lười biếng): Khi bạn lấy một Product từ database, Hibernate chưa lấy danh sách cartItermList ngay lập tức. Câu lệnh SQL chỉ lấy dữ liệu của bảng product.

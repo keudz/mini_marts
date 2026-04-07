@@ -312,6 +312,7 @@ public class AdminSeviceImpl implements AdminService {
             // Giảm giá 15% (nhân với 0.85)
             double newPrice = p.getPrice() * 0.85;
             p.setPrice(newPrice);
+            p.setIsDiscount(true);
             productRepository.save(p);
         }
     }

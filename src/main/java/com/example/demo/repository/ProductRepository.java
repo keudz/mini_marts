@@ -42,8 +42,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
             "LEFT JOIN Order_Iterm oi ON p.ID_PRODUCT = oi.product.ID_PRODUCT " +
             "WHERE p.createAt < :dateThreshold " +
             "AND (p.isDelete = false OR p.isDelete IS NULL) " +
+            "AND (p.isDiscount is NULL )" +
             "GROUP BY p.ID_PRODUCT " +
-            "HAVING COALESCE(SUM(oi.QUANTITY), 0) < 5")
+            "HAVING COALESCE(SUM(oi.QUANTITY), 0) < 20")
     List<Product> findOldProductsForDiscount(@Param("dateThreshold") LocalDate dateThreshold);
 
 

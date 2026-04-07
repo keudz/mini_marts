@@ -17,6 +17,7 @@ create table product(
                         create_at DATE not null
 
 
+
 );
 -- #alter table oders_items  add column id INT;
 --
