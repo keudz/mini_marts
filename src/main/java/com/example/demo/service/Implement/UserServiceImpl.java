@@ -446,6 +446,8 @@ public class UserServiceImpl implements UserService {
               OrderResponceDTO orderItem = new OrderResponceDTO();
               orderItem.setIdOrder(order.getID_ORDER());
               orderItem.setDes(order.getDESCRIPTION());
+              orderItem.setStatus(order.getSTATUS());
+
               for(Order_Iterm orderIterm :orderItermList){
                   OrderItemListResponceDTO itemResDTO = new OrderItemListResponceDTO();
                   itemResDTO.setProductId(orderIterm.getProduct().getID_PRODUCT());

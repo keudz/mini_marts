@@ -246,7 +246,7 @@ public class AdminSeviceImpl implements AdminService {
 
 
 
-    // ... (các code cũ của m)
+
 
     @Override
     public DashboardResponseDTO getDashboardMetrics() {

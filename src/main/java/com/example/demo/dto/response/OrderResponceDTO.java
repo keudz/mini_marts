@@ -22,7 +22,7 @@ public class OrderResponceDTO {
    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private String status;
    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-   private double total_amount;
+   private double total_amount ;
 
    private List<OrderItemListResponceDTO> orderItermList;
    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -33,6 +33,8 @@ public class OrderResponceDTO {
 
    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
    private String userPhone;
+
+
 
 }
 
